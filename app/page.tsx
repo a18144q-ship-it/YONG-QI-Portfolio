@@ -33,6 +33,13 @@ const aurePalette = [
   { name: "AMBER", hex: "#D7C891" },
 ];
 
+const sswwPalette = [
+  { name: "PORCELAIN", hex: "#F5F4F0" },
+  { name: "SAND", hex: "#E8CFA2" },
+  { name: "TERRACOTTA", hex: "#A9622A" },
+  { name: "AQUA", hex: "#3977BF" },
+];
+
 function Arrow() { return <span className="arrow" aria-hidden="true">↗</span>; }
 
 function Ticker() {
@@ -144,6 +151,62 @@ function AureDesignSystem() {
   </section>;
 }
 
+function SswwCaseIntro() {
+  return <div className="aure-case-intro ssww-case-intro reveal">
+    <figure className="aure-hero-visual ssww-hero-visual">
+      <img src={asset("ssww", 1)} alt="SSWW 按摩浴缸与暖调浴室生活场景" />
+      <figcaption><span>BRAND WORLD · 02</span><b>A warm ritual, made personal.</b></figcaption>
+    </figure>
+    <article className="aure-strategy-panel ssww-strategy-panel">
+      <header className="aure-strategy-head"><p>CASE 02 · SSWW</p><span>E-COMMERCE VISUAL SYSTEM / 2026</span></header>
+      <div className="aure-title-block ssww-title-block">
+        <p>卫浴产品视觉系统</p>
+        <h2><span>暖调轻奢</span><em>浴境</em></h2>
+        <strong>SSWW Massage Bath</strong>
+      </div>
+      <section className="aure-context" aria-labelledby="ssww-context-title">
+        <div><span>01</span><h3 id="ssww-context-title">设计背景</h3></div>
+        <p>顺应居家卫浴体验升级趋势，项目围绕浴缸产品展开专项视觉升级：将按摩功能、空间氛围与使用体验转化为清晰卖点，兼顾品牌价值传递与电商转化效率。</p>
+      </section>
+      <section className="aure-logic" aria-labelledby="ssww-logic-title">
+        <div className="aure-section-label"><span>02</span><h3 id="ssww-logic-title">设计推导</h3></div>
+        <div className="aure-insight-grid">
+          <div><span>AUDIENCE / 核心受众</span><strong>25–45 岁精致中产<br />关注品质与居家体验</strong></div>
+          <div><span>TENSION / 核心痛点</span><strong>久坐腰酸、小户型局限<br />与枯燥单一的沐浴体验</strong></div>
+        </div>
+        <div className="aure-core"><span>EXPERIENCE CORE</span><strong>舒缓按摩 × 场景疗愈</strong></div>
+        <ul className="aure-proof-points" aria-label="卫浴产品核心优势">
+          <li><b>SURF SPA</b><span>冲浪按摩系统</span></li>
+          <li><b>ERGONOMIC</b><span>工学靠背设计</span></li>
+          <li><b>CUSTOM</b><span>多模式自定义</span></li>
+          <li><b>IMMERSION</b><span>全景氛围体验</span></li>
+        </ul>
+      </section>
+      <div className="aure-direction">
+        <div><span>03 / VISUAL DIRECTION</span><strong>「暖调轻奢 × 意式极简」</strong></div>
+        <p>以暖色空间和克制留白建立松弛感，通过人物互动、功能特写与场景代入，让舒适体验可视化，并提升品牌层级。</p>
+      </div>
+    </article>
+  </div>;
+}
+
+function SswwDesignSystem() {
+  return <section className="aure-brand-strip ssww-brand-strip reveal" aria-label="SSWW 色彩与产品设计系统">
+    <div className="aure-palette-copy">
+      <header><p>04 / COLOR SYSTEM</p><span>VISUAL LANGUAGE · SSWW</span></header>
+      <h3>温润材质承载舒适，<em>品牌蓝锁定功能焦点。</em></h3>
+      <div className="aure-swatches" aria-label="SSWW 品牌色板">
+        {sswwPalette.map((color) => <div className="aure-swatch" key={color.hex}><i style={{ background: color.hex }} /><span>{color.name}</span><b>{color.hex}</b></div>)}
+      </div>
+      <p>场景以 C4D + Octane 搭建渲染，结合 PS 精修控制材质与光感；人物和环境通过 AI 辅助延展，使产品功能、空间体验与生活方式形成统一叙事。</p>
+    </div>
+    <figure className="aure-product-cutout ssww-product-cutout">
+      <img src="/v2/ssww/ssww-bath-cutout.png" alt="SSWW 白色按摩浴缸透明背景产品图" />
+      <figcaption><span>SSWW MASSAGE BATH</span><b>Porcelain white · Product form</b></figcaption>
+    </figure>
+  </section>;
+}
+
 export default function Home() {
   const cursorRef = useRef<HTMLDivElement>(null);
   const [modal, setModal] = useState<{ src: string; alt: string } | null>(null);
@@ -190,7 +253,7 @@ export default function Home() {
     <section className="case-section aure-section" id="aure"><AureCaseIntro /><AureDesignSystem /><div className="detail-grid fade-grid aure-detail"><Grid images={[2, 3, 4]} label="aure" onOpen={open} /></div></section>
     <Ticker />
 
-    <section className="case-section ssww-section" id="ssww"><div className="split-intro reveal"><img src={asset("ssww", 1)} alt="SSWW 按摩浴缸场景" /><div className="intro-copy paper-copy"><p className="eyebrow">案例 02 · SSWW</p><h2>卫浴视觉</h2><em>Bath Collection</em><p>围绕生活方式、空间氛围与功能表达，分别呈现两款浴缸的电商详情内容。</p></div></div><div className="bath-series"><div className="group-label reveal"><span>01</span><div><h3>按摩浴缸</h3><p>Massage Bath</p></div></div><div className="detail-grid fade-grid bath-grid massage-detail"><Grid images={[2, 3, 4, 5]} label="ssww" onOpen={open} /></div></div><div className="bath-series"><div className="group-label reveal"><span>02</span><div><h3>独立浴缸</h3><p>Freestanding Bath</p></div></div><div className="detail-grid fade-grid bath-grid freestanding-detail"><Grid images={[7, 8, 9, 10]} label="ssww" onOpen={open} /></div></div></section>
+    <section className="case-section ssww-section" id="ssww"><SswwCaseIntro /><SswwDesignSystem /><div className="bath-series"><div className="group-label reveal"><span>01</span><div><h3>按摩浴缸</h3><p>Massage Bath</p></div></div><div className="detail-grid fade-grid bath-grid massage-detail"><Grid images={[2, 3, 4, 5]} label="ssww" onOpen={open} /></div></div><div className="bath-series"><div className="group-label reveal"><span>02</span><div><h3>独立浴缸</h3><p>Freestanding Bath</p></div></div><div className="detail-grid fade-grid bath-grid freestanding-detail"><Grid images={[7, 8, 9, 10]} label="ssww" onOpen={open} /></div></div></section>
     <Ticker />
 
     <section className="case-section render-section" id="renders"><div className="gallery-title reveal"><p className="eyebrow">案例 03</p><h2>产品渲染<br /><em>Product Visuals</em></h2><p>按单一产品划分画面，用统一行高和清晰节奏呈现不同角度。</p></div>{renderGroups.map((group) => <div className={`render-group ${group.model ? "model-group" : ""}`} key={group.index}><div className="group-label reveal"><span>{group.index}</span><div><h3>{group.sub}</h3><p>{group.title}</p></div></div><RenderGrid images={group.images} layout={group.layout} onOpen={open} /></div>)}</section>
