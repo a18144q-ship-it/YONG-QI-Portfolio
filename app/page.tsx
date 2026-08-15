@@ -128,8 +128,11 @@ function AureCaseIntro() {
         </ul>
       </section>
       <div className="aure-direction">
-        <div><span>04 / 视觉定调 · VISUAL DIRECTION</span><strong>「静谧暗调 × 琥珀暖光」</strong></div>
-        <p>以深蓝空间建立安静边界，用琥珀色能量光强调声学结构；超自然环境将功能利益升格为品牌体验，强化中高端质感。</p>
+        <div className="aure-section-label aure-direction-label"><span>04</span><h3>视觉定调</h3></div>
+        <div className="aure-direction-content">
+          <strong>「静谧暗调 × 琥珀暖光」</strong>
+          <p>以深蓝空间建立安静边界，用琥珀色能量光强调声学结构；超自然环境将功能利益升格为品牌体验，强化中高端质感。</p>
+        </div>
       </div>
     </article>
   </div>;
@@ -185,8 +188,11 @@ function SswwCaseIntro() {
         </ul>
       </section>
       <div className="aure-direction">
-        <div><span>04 / 视觉定调 · VISUAL DIRECTION</span><strong>「暖调轻奢 × 意式极简」</strong></div>
-        <p>以暖色空间和克制留白建立松弛感，通过人物互动、功能特写与场景代入，让舒适体验可视化，并提升品牌层级。</p>
+        <div className="aure-section-label aure-direction-label"><span>04</span><h3>视觉定调</h3></div>
+        <div className="aure-direction-content">
+          <strong>「暖调轻奢 × 意式极简」</strong>
+          <p>以暖色空间和克制留白建立松弛感，通过人物互动、功能特写与场景代入，让舒适体验可视化，并提升品牌层级。</p>
+        </div>
       </div>
     </article>
   </div>;

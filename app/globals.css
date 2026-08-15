@@ -200,3 +200,8 @@
 /* V28 — four-step case-study hierarchy */
 .aure-selling-label{margin:17px 0 9px;padding-top:14px;border-top:1px solid rgba(248,246,239,.18)}.aure-selling-label+ .aure-core{margin-top:0}.ssww-strategy-panel .aure-selling-label{border-color:rgba(255,255,255,.24)}
 @media(max-width:900px){.aure-selling-label{margin-top:19px}}
+
+/* V29 — align the fourth step with the preceding section labels */
+.aure-direction{display:block}.aure-direction-label{margin:0 0 12px}.aure-direction-label span{display:inline;margin:0;color:#d7c891;font-family:Georgia,serif;font-size:12px;font-weight:400;letter-spacing:normal}.aure-direction-content{display:grid;grid-template-columns:minmax(190px,.85fr) 1.15fr;gap:22px}.ssww-strategy-panel .aure-direction-label span{color:#f1dfb9}
+@media(max-width:1100px){.aure-direction-content{grid-template-columns:1fr}}
+@media(max-width:900px){.aure-direction-label{margin-bottom:12px}.aure-direction-content{gap:10px}}
