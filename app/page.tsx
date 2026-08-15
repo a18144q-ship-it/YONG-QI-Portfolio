@@ -26,6 +26,13 @@ const aiGroups = [
   { index: "03", title: "产品场景生成", note: "AI Product Scenes · Beauty & Beverage", images: [8, 9, 10, 11, 12, 13, 14, 15] },
 ];
 
+const aurePalette = [
+  { name: "NIGHT", hex: "#0D111B" },
+  { name: "SLATE", hex: "#1D293A" },
+  { name: "TEAL", hex: "#174B5B" },
+  { name: "AMBER", hex: "#D7C891" },
+];
+
 function Arrow() { return <span className="arrow" aria-hidden="true">↗</span>; }
 
 function Ticker() {
@@ -91,7 +98,7 @@ function AureCaseIntro() {
       <header className="aure-strategy-head"><p>CASE 01 · AURE</p><span>E-COMMERCE VISUAL SYSTEM / 2026</span></header>
       <div className="aure-title-block">
         <p>耳机产品视觉系统</p>
-        <h2>让静谧<br /><em>被看见</em></h2>
+        <h2><span>让静谧</span><em>被看见</em></h2>
         <strong>AURE Buds Pro</strong>
       </div>
       <section className="aure-context" aria-labelledby="aure-context-title">
@@ -118,6 +125,23 @@ function AureCaseIntro() {
       </div>
     </article>
   </div>;
+}
+
+function AureDesignSystem() {
+  return <section className="aure-brand-strip reveal" aria-label="AURE 色彩与产品设计系统">
+    <div className="aure-palette-copy">
+      <header><p>04 / COLOR SYSTEM</p><span>VISUAL LANGUAGE · AURE</span></header>
+      <h3>沉静作为底色，<em>琥珀定义焦点。</em></h3>
+      <div className="aure-swatches" aria-label="AURE 品牌色板">
+        {aurePalette.map((color) => <div className="aure-swatch" key={color.hex}><i style={{ background: color.hex }} /><span>{color.name}</span><b>{color.hex}</b></div>)}
+      </div>
+      <p>以深海蓝建立静谧边界，琥珀暖光聚焦声学结构，银黑金属强化精密与高端感。核心画面以 C4D + Octane 搭建，并结合 AI 完成情绪环境延展。</p>
+    </div>
+    <figure className="aure-product-cutout">
+      <img src="/v2/aure/aure-product-cutout.png" alt="AURE Buds Pro 黑色金属耳机与充电盒产品图" />
+      <figcaption><span>AURE BUDS PRO</span><b>Graphite finish · Product form</b></figcaption>
+    </figure>
+  </section>;
 }
 
 export default function Home() {
@@ -163,7 +187,7 @@ export default function Home() {
     <section className="directory" id="cases"><div className="directory-head reveal"><p className="eyebrow">内容索引 · INDEX</p><h2 className="inside-title">What’s<br /><em>Inside?</em></h2><p>四个内容入口，移动指针探索不同媒介与视觉方向。</p></div><div className="case-directory reveal">{catalogue.map((item) => <CaseTile item={item} key={item.id} />)}</div></section>
     <Ticker />
 
-    <section className="case-section aure-section" id="aure"><AureCaseIntro /><div className="detail-grid fade-grid aure-detail"><Grid images={[2, 3, 4]} label="aure" onOpen={open} /></div></section>
+    <section className="case-section aure-section" id="aure"><AureCaseIntro /><AureDesignSystem /><div className="detail-grid fade-grid aure-detail"><Grid images={[2, 3, 4]} label="aure" onOpen={open} /></div></section>
     <Ticker />
 
     <section className="case-section ssww-section" id="ssww"><div className="split-intro reveal"><img src={asset("ssww", 1)} alt="SSWW 按摩浴缸场景" /><div className="intro-copy paper-copy"><p className="eyebrow">案例 02 · SSWW</p><h2>卫浴视觉</h2><em>Bath Collection</em><p>围绕生活方式、空间氛围与功能表达，分别呈现两款浴缸的电商详情内容。</p></div></div><div className="bath-series"><div className="group-label reveal"><span>01</span><div><h3>按摩浴缸</h3><p>Massage Bath</p></div></div><div className="detail-grid fade-grid bath-grid massage-detail"><Grid images={[2, 3, 4, 5]} label="ssww" onOpen={open} /></div></div><div className="bath-series"><div className="group-label reveal"><span>02</span><div><h3>独立浴缸</h3><p>Freestanding Bath</p></div></div><div className="detail-grid fade-grid bath-grid freestanding-detail"><Grid images={[7, 8, 9, 10]} label="ssww" onOpen={open} /></div></div></section>
