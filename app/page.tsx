@@ -112,12 +112,13 @@ function AureCaseIntro() {
         <div><span>01</span><h3 id="aure-context-title">设计背景</h3></div>
         <p>TWS 市场从参数竞争进入体验竞争。AURE 以高保真音质、主动降噪与 IPX7 防水切入中高端价位，视觉任务不只是展示功能，更要把“沉浸感”转译为可感知的品牌价值。</p>
       </section>
-      <section className="aure-logic" aria-labelledby="aure-logic-title">
-        <div className="aure-section-label"><span>02</span><h3 id="aure-logic-title">设计推导</h3></div>
+      <section className="aure-logic" aria-labelledby="aure-audience-title">
+        <div className="aure-section-label"><span>02</span><h3 id="aure-audience-title">受众分析</h3></div>
         <div className="aure-insight-grid">
           <div><span>AUDIENCE / 核心受众</span><strong>23–45 岁通勤白领<br />与高频商务差旅人群</strong></div>
           <div><span>TENSION / 核心痛点</span><strong>隔绝环境干扰<br />获得稳定沉浸的聆听体验</strong></div>
         </div>
+        <div className="aure-section-label aure-selling-label"><span>03</span><h3>卖点提炼</h3></div>
         <div className="aure-core"><span>EXPERIENCE CORE</span><strong>沉浸降噪 × 高保真聆听</strong></div>
         <ul className="aure-proof-points" aria-label="产品核心优势">
           <li><b>ANC</b><span>智能深度降噪</span></li>
@@ -127,7 +128,7 @@ function AureCaseIntro() {
         </ul>
       </section>
       <div className="aure-direction">
-        <div><span>03 / VISUAL DIRECTION</span><strong>「静谧暗调 × 琥珀暖光」</strong></div>
+        <div><span>04 / 视觉定调 · VISUAL DIRECTION</span><strong>「静谧暗调 × 琥珀暖光」</strong></div>
         <p>以深蓝空间建立安静边界，用琥珀色能量光强调声学结构；超自然环境将功能利益升格为品牌体验，强化中高端质感。</p>
       </div>
     </article>
@@ -168,12 +169,13 @@ function SswwCaseIntro() {
         <div><span>01</span><h3 id="ssww-context-title">设计背景</h3></div>
         <p>顺应居家卫浴体验升级趋势，项目围绕浴缸产品展开专项视觉升级：将按摩功能、空间氛围与使用体验转化为清晰卖点，兼顾品牌价值传递与电商转化效率。</p>
       </section>
-      <section className="aure-logic" aria-labelledby="ssww-logic-title">
-        <div className="aure-section-label"><span>02</span><h3 id="ssww-logic-title">设计推导</h3></div>
+      <section className="aure-logic" aria-labelledby="ssww-audience-title">
+        <div className="aure-section-label"><span>02</span><h3 id="ssww-audience-title">受众分析</h3></div>
         <div className="aure-insight-grid">
           <div><span>AUDIENCE / 核心受众</span><strong>25–45 岁精致中产<br />关注品质与居家体验</strong></div>
           <div><span>TENSION / 核心痛点</span><strong>久坐腰酸、小户型局限<br />与枯燥单一的沐浴体验</strong></div>
         </div>
+        <div className="aure-section-label aure-selling-label"><span>03</span><h3>卖点提炼</h3></div>
         <div className="aure-core"><span>EXPERIENCE CORE</span><strong>舒缓按摩 × 场景疗愈</strong></div>
         <ul className="aure-proof-points" aria-label="卫浴产品核心优势">
           <li><b>SURF SPA</b><span>冲浪按摩系统</span></li>
@@ -183,7 +185,7 @@ function SswwCaseIntro() {
         </ul>
       </section>
       <div className="aure-direction">
-        <div><span>03 / VISUAL DIRECTION</span><strong>「暖调轻奢 × 意式极简」</strong></div>
+        <div><span>04 / 视觉定调 · VISUAL DIRECTION</span><strong>「暖调轻奢 × 意式极简」</strong></div>
         <p>以暖色空间和克制留白建立松弛感，通过人物互动、功能特写与场景代入，让舒适体验可视化，并提升品牌层级。</p>
       </div>
     </article>

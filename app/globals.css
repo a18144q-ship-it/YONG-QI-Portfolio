@@ -196,3 +196,7 @@
 .aure-case-intro{height:clamp(880px,56vw,930px);min-height:0;align-items:stretch}.aure-hero-visual,.aure-strategy-panel{height:100%}.aure-hero-visual img{object-fit:cover}.aure-case-intro:not(.ssww-case-intro) .aure-hero-visual img{object-position:48% 50%}
 @media(max-width:1100px) and (min-width:901px){.aure-case-intro{height:930px}}
 @media(max-width:900px){.aure-case-intro{height:auto}.aure-hero-visual,.aure-strategy-panel{height:auto}.aure-hero-visual{aspect-ratio:4/5}}
+
+/* V28 — four-step case-study hierarchy */
+.aure-selling-label{margin:17px 0 9px;padding-top:14px;border-top:1px solid rgba(248,246,239,.18)}.aure-selling-label+ .aure-core{margin-top:0}.ssww-strategy-panel .aure-selling-label{border-color:rgba(255,255,255,.24)}
+@media(max-width:900px){.aure-selling-label{margin-top:19px}}
