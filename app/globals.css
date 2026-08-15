@@ -205,3 +205,7 @@
 .aure-direction{display:block}.aure-direction-label{margin:0 0 12px}.aure-direction-label span{display:inline;margin:0;color:#d7c891;font-family:Georgia,serif;font-size:12px;font-weight:400;letter-spacing:normal}.aure-direction-content{display:grid;grid-template-columns:minmax(190px,.85fr) 1.15fr;gap:22px}.ssww-strategy-panel .aure-direction-label span{color:#f1dfb9}
 @media(max-width:1100px){.aure-direction-content{grid-template-columns:1fr}}
 @media(max-width:900px){.aure-direction-label{margin-bottom:12px}.aure-direction-content{gap:10px}}
+
+/* V30 — clearer bilingual feature-label rhythm */
+.aure-proof-points b{font-size:14.5px}.aure-proof-points span{font-size:13.25px;line-height:1.45}
+@media(max-width:900px){.aure-proof-points b{font-size:14px}.aure-proof-points span{font-size:13.75px}}
