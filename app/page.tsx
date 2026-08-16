@@ -1,14 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const asset = (folder: string, number: number) => `/v2/${folder}/${String(number).padStart(2, "0")}.webp`;
 
 const catalogue = [
-  { href: "#aure", id: "01", title: "耳机视觉", sub: "AURE BUDS PRO", image: asset("aure", 1), className: "case-aure", accent: "#75889b" },
-  { href: "#ssww", id: "02", title: "卫浴视觉", sub: "SSWW BATH", image: asset("ssww", 1), className: "case-ssww", accent: "#ae9275" },
-  { href: "#renders", id: "03", title: "产品渲染", sub: "PRODUCT RENDERS", image: asset("renders", 2), className: "case-renders", accent: "#788070" },
-  { href: "#aigc", id: "04", title: "图像与动态", sub: "IMAGE · MOTION · AI", image: asset("aigc", 7), className: "case-aigc", accent: "#aa817a" },
+  { href: "#aure", id: "01", title: "耳机视觉", sub: "AURE BUDS PRO", image: asset("aure", 1), className: "case-aure" },
+  { href: "#ssww", id: "02", title: "卫浴视觉", sub: "SSWW BATH", image: asset("ssww", 1), className: "case-ssww" },
+  { href: "#renders", id: "03", title: "产品渲染", sub: "PRODUCT RENDERS", image: asset("renders", 2), className: "case-renders" },
+  { href: "#aigc", id: "04", title: "图像与动态", sub: "IMAGE · MOTION · AI", image: asset("aigc", 7), className: "case-aigc" },
 ];
 
 const renderGroups = [
@@ -44,16 +44,6 @@ function Arrow() { return <span className="arrow" aria-hidden="true">↗</span>;
 
 function Ticker() {
   return <div className="marquee" aria-hidden="true"><div className="marquee-track">{[0, 1, 2, 3].map((item) => <span key={item}>E-COMMERCE VISUALS <b>✦</b> 3D RENDERING <b>✦</b> IMAGE REFINEMENT <b>✦</b> AI-ASSISTED CREATION <b>✦</b></span>)}</div></div>;
-}
-
-function DirectionMark({ color }: { color: string }) {
-  return <span className="direction-mark" style={{ "--mark-color": color } as CSSProperties} aria-hidden="true"><i /><b /></span>;
-}
-
-function updateDirection(element: HTMLElement, x: number, y: number) {
-  const rect = element.getBoundingClientRect();
-  const angle = Math.atan2(y - (rect.top + 30), x - (rect.right - 30)) * 180 / Math.PI + 90;
-  element.style.setProperty("--mark-angle", `${angle}deg`);
 }
 
 type CarouselPosition = "left" | "center" | "right" | "hidden";
@@ -92,10 +82,9 @@ function DirectoryCarousel() {
               setActiveIndex(index);
             }
           }}
-          onPointerMove={(event) => updateDirection(event.currentTarget, event.clientX, event.clientY)}
         >
           <div className="tile-art"><img src={item.image} alt="" /></div>
-          <div className="carousel-card-top"><span><b>{item.id}</b> / CASE</span><DirectionMark color={item.accent} /></div>
+          <div className="carousel-card-top"><span><b>{item.id}</b> / CASE</span></div>
           <div className="tile-label"><h3>{item.title}</h3><p>{item.sub}</p><Arrow /></div>
         </a>;
       })}
