@@ -242,3 +242,7 @@
 /* V39 — enlarge the adjusted carousel by ten percent */
 @media(min-width:901px){.case-carousel-stage{height:clamp(414px,37vw,572px)}.carousel-card{width:30.8%;padding:clamp(13px,1.2vw,20px)}.carousel-card .tile-label h3{font-size:clamp(24px,2.64vw,46px)}.carousel-card .tile-label p{font-size:clamp(9px,.75vw,12.5px)}.carousel-card-top b{font-size:18px}.case-carousel-controls>button{width:48px;height:48px;font-size:19px}.case-carousel-status span{font-size:18px}}
 @media(max-width:900px){.case-carousel-stage{height:clamp(343px,93.5vw,458px)}.carousel-card{width:55%;padding:13px}.carousel-card .tile-label h3{font-size:clamp(20px,6vw,28px)}.carousel-card .tile-label p{font-size:10px}.carousel-card-top b{font-size:16px}.case-carousel-controls>button{width:44px;height:44px;font-size:18px}}
+
+/* V40 — add seven percent more space between cards */
+@media(min-width:901px){.carousel-card.is-left{transform:translateX(-162%) rotateY(23deg) scale(.91)}.carousel-card.is-right{transform:translateX(62%) rotateY(-23deg) scale(.91)}}
+@media(max-width:900px){.carousel-card.is-left{transform:translateX(-130%) rotateY(18deg) scale(.87)}.carousel-card.is-right{transform:translateX(30%) rotateY(-18deg) scale(.87)}}
