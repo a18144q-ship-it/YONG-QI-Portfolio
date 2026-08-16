@@ -223,3 +223,6 @@
 
 /* V34 — complete rounded cards and translucent side fades */
 .case-carousel-stage{overflow:visible}.carousel-card .tile-art:after{background:linear-gradient(180deg,rgba(0,0,0,0) 48%,rgba(0,0,0,.48) 100%)}.carousel-card.is-left,.carousel-card.is-right{border-color:transparent;background:transparent;filter:saturate(.9) brightness(1.03)}.carousel-card.is-left .tile-art{-webkit-mask-image:linear-gradient(90deg,#000 0%,#000 58%,rgba(0,0,0,.58) 78%,transparent 100%);mask-image:linear-gradient(90deg,#000 0%,#000 58%,rgba(0,0,0,.58) 78%,transparent 100%)}.carousel-card.is-right .tile-art{-webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.58) 22%,#000 42%,#000 100%);mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.58) 22%,#000 42%,#000 100%)}.carousel-card.is-left .tile-art:after,.carousel-card.is-right .tile-art:after{background:linear-gradient(180deg,rgba(0,0,0,0) 58%,rgba(0,0,0,.38) 100%)}
+
+/* V35 — stable rounded clipping without hover outlines */
+.carousel-card{border:0;transform-style:flat;clip-path:inset(0 round clamp(16px,1.5vw,24px));-webkit-clip-path:inset(0 round clamp(16px,1.5vw,24px))}.carousel-card.is-center{box-shadow:none}.carousel-card .tile-art,.carousel-card .tile-art img,.carousel-card .tile-art:after{border-radius:inherit}.carousel-card.is-center:hover .tile-art img{transform:none}
