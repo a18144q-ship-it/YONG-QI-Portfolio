@@ -226,3 +226,7 @@
 
 /* V35 — stable rounded clipping without hover outlines */
 .carousel-card{border:0;transform-style:flat;clip-path:inset(0 round clamp(16px,1.5vw,24px));-webkit-clip-path:inset(0 round clamp(16px,1.5vw,24px))}.carousel-card.is-center{box-shadow:none}.carousel-card .tile-art,.carousel-card .tile-art img,.carousel-card .tile-art:after{border-radius:inherit}.carousel-card.is-center:hover .tile-art img{transform:none}
+
+/* V36 — slightly smaller coverflow cards */
+@media(min-width:901px){.case-carousel-stage{height:clamp(470px,42vw,650px)}.carousel-card{width:35%}}
+@media(max-width:900px){.case-carousel-stage{height:clamp(390px,106vw,520px)}.carousel-card{width:62%}}
