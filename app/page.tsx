@@ -8,7 +8,7 @@ const catalogue = [
   { href: "#aure", id: "01", title: "耳机视觉", sub: "AURE BUDS PRO", image: asset("aure", 1), className: "case-aure" },
   { href: "#ssww", id: "02", title: "卫浴视觉", sub: "SSWW BATH", image: asset("ssww", 1), className: "case-ssww" },
   { href: "#renders", id: "03", title: "产品渲染", sub: "PRODUCT RENDERS", image: asset("renders", 2), className: "case-renders" },
-  { href: "#aigc", id: "04", title: "图像与动态", sub: "IMAGE · MOTION · AI", image: asset("aigc", 7), className: "case-aigc" },
+  { href: "#aigc", id: "04", title: "AI视觉设计", sub: "IMAGE · MOTION · AI", image: asset("aigc", 7), className: "case-aigc" },
 ];
 
 const renderGroups = [
