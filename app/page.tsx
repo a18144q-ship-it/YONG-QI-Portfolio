@@ -56,12 +56,56 @@ function updateDirection(element: HTMLElement, x: number, y: number) {
   element.style.setProperty("--mark-angle", `${angle}deg`);
 }
 
-function CaseTile({ item }: { item: (typeof catalogue)[number] }) {
-  return <a className={`case-tile ${item.className}`} href={item.href} onPointerMove={(event) => updateDirection(event.currentTarget, event.clientX, event.clientY)}>
-    <div className="tile-art"><img src={item.image} alt="" /></div>
-    <div className="tile-top"><span>CASE {item.id}</span><DirectionMark color={item.accent} /></div>
-    <div className="tile-label"><h3>{item.title}</h3><p>{item.sub}</p><Arrow /></div>
-  </a>;
+type CarouselPosition = "left" | "center" | "right" | "hidden";
+
+function DirectoryCarousel() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const total = catalogue.length;
+  const move = (direction: number) => setActiveIndex((current) => (current + direction + total) % total);
+  const positionFor = (index: number): CarouselPosition => {
+    const offset = (index - activeIndex + total) % total;
+    if (offset === 0) return "center";
+    if (offset === 1) return "right";
+    if (offset === total - 1) return "left";
+    return "hidden";
+  };
+
+  return <div className="case-carousel reveal" aria-label="案例卡片轮播">
+    <div className="case-carousel-stage" tabIndex={0} onKeyDown={(event) => {
+      if (event.key === "ArrowLeft") move(-1);
+      if (event.key === "ArrowRight") move(1);
+    }}>
+      {catalogue.map((item, index) => {
+        const position = positionFor(index);
+        const isCenter = position === "center";
+        return <a
+          className={`carousel-card is-${position} ${item.className}`}
+          href={item.href}
+          key={item.id}
+          tabIndex={position === "hidden" ? -1 : 0}
+          aria-current={isCenter ? "true" : undefined}
+          aria-hidden={position === "hidden" ? true : undefined}
+          aria-label={`${item.id} ${item.title}${isCenter ? "，进入项目" : "，切换到此项目"}`}
+          onClick={(event) => {
+            if (!isCenter) {
+              event.preventDefault();
+              setActiveIndex(index);
+            }
+          }}
+          onPointerMove={(event) => updateDirection(event.currentTarget, event.clientX, event.clientY)}
+        >
+          <div className="tile-art"><img src={item.image} alt="" /></div>
+          <div className="carousel-card-top"><span><b>{item.id}</b> / CASE</span><DirectionMark color={item.accent} /></div>
+          <div className="tile-label"><h3>{item.title}</h3><p>{item.sub}</p><Arrow /></div>
+        </a>;
+      })}
+    </div>
+    <div className="case-carousel-controls">
+      <button type="button" onClick={() => move(-1)} aria-label="上一个案例">←</button>
+      <div className="case-carousel-status" aria-live="polite"><span>{String(activeIndex + 1).padStart(2, "0")}</span><i /><b>{String(total).padStart(2, "0")}</b><em>点击中央卡片进入案例</em></div>
+      <button type="button" onClick={() => move(1)} aria-label="下一个案例">→</button>
+    </div>
+  </div>;
 }
 
 function ZoomImage({ src, alt, onOpen, className = "" }: { src: string; alt: string; onOpen: (src: string, alt: string) => void; className?: string }) {
@@ -255,7 +299,7 @@ export default function Home() {
     </header>
     <Ticker />
 
-    <section className="directory" id="cases"><div className="directory-head reveal"><p className="eyebrow">内容索引 · INDEX</p><h2 className="inside-title">What’s<br /><em>Inside?</em></h2><p>四个内容入口，移动指针探索不同媒介与视觉方向。</p></div><div className="case-directory reveal">{catalogue.map((item) => <CaseTile item={item} key={item.id} />)}</div></section>
+    <section className="directory" id="cases"><div className="directory-head reveal"><p className="eyebrow">内容索引 · INDEX</p><h2 className="inside-title">What’s<br /><em>Inside?</em></h2><p>三卡聚焦式索引，左右切换不同视觉方向，点击中央卡片进入对应项目。</p></div><DirectoryCarousel /></section>
     <Ticker />
 
     <section className="case-section aure-section" id="aure"><AureCaseIntro /><AureDesignSystem /><div className="detail-grid fade-grid aure-detail"><Grid images={[2, 3, 4]} label="aure" onOpen={open} /></div></section>
