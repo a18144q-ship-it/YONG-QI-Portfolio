@@ -273,3 +273,6 @@
 
 /* V47 — shift the complete cover copy system to the right */
 @media(min-width:901px){.hero-editorial .hero-copy{transform:translateX(25%)}}
+
+/* V48 — draw the top and bottom cover labels toward the title */
+@media(min-width:901px){.hero-editorial .hero-meta-line{transform:translateY(clamp(58px,8vh,88px))}.hero-editorial .hero-bottom{transform:translateY(clamp(-88px,-8vh,-58px))}}
