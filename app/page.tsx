@@ -285,7 +285,7 @@ export default function Home() {
     <header className="hero hero-editorial" id="top">
       <div className="hero-copy">
         <div className="hero-meta-line"><p className="eyebrow">YONG QI · VISUAL PORTFOLIO</p><span>01 / 2026</span></div>
-        <div className="hero-title-group"><p className="hero-cn-accent">视觉设计作品集</p><h1><span>PORT</span><span>FOLIO</span></h1><p className="hero-edition">Selected Works <em>2026</em></p></div>
+        <div className="hero-title-group"><p className="hero-cn-accent">2026作品集</p><h1><span>PORT</span><span>FOLIO</span></h1><p className="hero-edition">Selected Works <em>2026</em></p></div>
         <div className="hero-bottom"><p>产品视觉 · 三维渲染 · AI 图像</p><a href="#cases" className="circle-link" aria-label="查看案例"><Arrow /></a></div>
       </div>
       <div className="hero-art reveal"><img src="/portfolio-ufo-cover.png" alt="UFO 光束吸起奶牛与斑马的极简插画" /></div>
