@@ -234,3 +234,7 @@
 /* V37 — keep carousel project titles on one line */
 .carousel-card .tile-label h3{white-space:nowrap}
 @media(max-width:900px){.carousel-card .tile-label h3{font-size:clamp(24px,7.5vw,34px)}}
+
+/* V38 — reduce the complete carousel index by twenty percent */
+@media(min-width:901px){.case-carousel-stage{height:clamp(376px,33.6vw,520px)}.carousel-card{width:28%;padding:clamp(12px,1.1vw,18px)}.carousel-card .tile-label h3{font-size:clamp(22px,2.4vw,42px)}.carousel-card .tile-label p{font-size:clamp(8px,.68vw,11.5px)}.carousel-card-top{font-size:8px}.carousel-card-top b{font-size:16px}.case-carousel-controls{margin-top:18px}.case-carousel-controls>button{width:44px;height:44px;font-size:18px}.case-carousel-status span{font-size:17px}}
+@media(max-width:900px){.case-carousel-stage{height:clamp(312px,85vw,416px)}.carousel-card{width:50%;padding:12px}.carousel-card .tile-label h3{font-size:clamp(20px,6vw,28px)}.carousel-card .tile-label p{font-size:9px}.carousel-card-top b{font-size:15px}.case-carousel-controls>button{width:40px;height:40px;font-size:17px}}
