@@ -288,7 +288,11 @@ export default function Home() {
         <div className="hero-title-group"><p className="hero-cn-accent">2026作品集</p><h1><span>PORT</span><span>FOLIO</span></h1><p className="hero-edition">Selected Works <em>2026</em></p></div>
         <div className="hero-bottom"><p>产品视觉 · 三维渲染 · AI 图像</p><a href="#cases" className="circle-link" aria-label="查看案例"><Arrow /></a></div>
       </div>
-      <div className="hero-art reveal"><img src="/portfolio-ufo-cover.png" alt="UFO 光束吸起奶牛与斑马的极简插画" /></div>
+      <div className="hero-art reveal">
+        <video autoPlay loop muted playsInline preload="auto" poster="/portfolio-ufo-cover.png" aria-label="UFO 光束吸起奶牛与斑马的动态封面">
+          <source src="/portfolio-ufo-cover.mp4" type="video/mp4" />
+        </video>
+      </div>
     </header>
     <Ticker />
 
