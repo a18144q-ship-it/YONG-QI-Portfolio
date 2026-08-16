@@ -230,3 +230,7 @@
 /* V36 — slightly smaller coverflow cards */
 @media(min-width:901px){.case-carousel-stage{height:clamp(470px,42vw,650px)}.carousel-card{width:35%}}
 @media(max-width:900px){.case-carousel-stage{height:clamp(390px,106vw,520px)}.carousel-card{width:62%}}
+
+/* V37 — keep carousel project titles on one line */
+.carousel-card .tile-label h3{white-space:nowrap}
+@media(max-width:900px){.carousel-card .tile-label h3{font-size:clamp(24px,7.5vw,34px)}}
