@@ -91,7 +91,7 @@ function DirectoryCarousel() {
     </div>
     <div className="case-carousel-controls">
       <button type="button" onClick={() => move(-1)} aria-label="上一个案例">←</button>
-      <div className="case-carousel-status" aria-live="polite"><span>{String(activeIndex + 1).padStart(2, "0")}</span><i /><b>{String(total).padStart(2, "0")}</b><em>点击中央卡片进入案例</em></div>
+      <div className="case-carousel-status" aria-live="polite"><span>{String(activeIndex + 1).padStart(2, "0")}</span><i /><b>{String(total).padStart(2, "0")}</b><em>点击跳转</em></div>
       <button type="button" onClick={() => move(1)} aria-label="下一个案例">→</button>
     </div>
   </div>;
@@ -288,7 +288,7 @@ export default function Home() {
     </header>
     <Ticker />
 
-    <section className="directory" id="cases"><div className="directory-head reveal"><p className="eyebrow">内容索引 · INDEX</p><h2 className="inside-title">What’s<br /><em>Inside?</em></h2><p>三卡聚焦式索引，左右切换不同视觉方向，点击中央卡片进入对应项目。</p></div><DirectoryCarousel /></section>
+    <section className="directory" id="cases"><div className="directory-head reveal"><p className="eyebrow">内容索引 · INDEX</p><h2 className="inside-title">What’s<br /><em>Inside?</em></h2></div><DirectoryCarousel /></section>
     <Ticker />
 
     <section className="case-section aure-section" id="aure"><AureCaseIntro /><AureDesignSystem /><div className="detail-grid fade-grid aure-detail"><Grid images={[2, 3, 4]} label="aure" onOpen={open} /></div></section>
