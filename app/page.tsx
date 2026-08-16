@@ -302,8 +302,18 @@ export default function Home() {
 
     <section className="case-section aigc-section" id="aigc"><div className="split-intro reveal"><img src={asset("aigc", 7)} alt="Green Lounge AI 动态视觉" /><div className="intro-copy ai-copy"><p className="eyebrow">案例 04</p><h2>生成图像</h2><em>Image, Motion & AI</em><p>将生成图像、人物整合、分镜与动态图像分组为可阅读的商业视觉实验。</p></div></div>{aiGroups.map((group) => <div className={`ai-group ai-group-${group.index}`} key={group.index}><div className="group-label reveal"><span>{group.index}</span><div><h3>{group.title}</h3><p>{group.note}</p></div></div>{group.index === "02" && <><div className="motion-film reveal"><video controls playsInline preload="metadata" poster={asset("aigc", 7)}><source src="/v2/aigc/green-lounge-silent.mp4" type="video/mp4" /></video><div className="motion-copy"><p className="eyebrow">AI PRODUCT FILM · PROCESS</p><h4>智能单人沙发<br />AI 动态短片流程探索</h4><ul><li className="motion-step"><b>3D 场景搭建</b><span>完成风格化家居空间渲染，建立高质量静帧基调。</span></li><li className="motion-step"><b>AI 脚本生成</b><span>分析产品功能卖点与空间氛围，规划分镜脚本。</span></li><li className="motion-step"><b>生成分镜设定</b><span>围绕阅读、人与宠物互动等情境生成关键画面。</span></li><li className="motion-step"><b>后期剪辑调整</b><span>完成生视频、节奏剪辑、调色与转场节点。</span></li></ul></div></div><SofaWorkflow onOpen={open} /></>}{group.index === "03" ? <ProductSceneGrid images={group.images} onOpen={open} /> : group.index !== "02" && <Grid images={group.images} label="aigc" onOpen={open} />}</div>)}</section>
 
-    <section className="about-section" id="about"><p className="eyebrow">ABOUT</p><h2 className="reveal">YONG QI,<br /><em>Portfolio 2026.</em></h2><div className="about-grid reveal"><p>专注产品视觉、电商详情与三维渲染，以完整图像叙事帮助产品建立更清晰的感知。</p><p>独立完成产品建模、渲染、后期精修与 AI 辅助图像创作。</p></div></section>
-    <footer id="contact"><div className="footer-symbol"><span>✦</span><i>◌</i></div><p className="eyebrow">CONTACT</p><h2>YONG QI<br /><em>Portfolio 2026</em></h2><a className="mail-link" href="mailto:hello@example.com">hello@example.com <Arrow /></a><div className="footer-bottom"><span>YONG QI · VISUAL DESIGNER</span><span>© 2026</span><a href="#top">BACK TO TOP ↗</a></div></footer>
+    <footer className="about-contact-section" id="about">
+      <span className="contact-anchor" id="contact" aria-hidden="true" />
+      <div className="about-contact-top"><p className="eyebrow">ABOUT · CONTACT</p><a href="#top">BACK TO TOP ↗</a></div>
+      <div className="about-contact-main">
+        <h2 className="reveal">YONG QI,<br /><em>Portfolio 2026.</em></h2>
+        <div className="about-contact-copy reveal"><p>专注产品视觉、电商详情与三维渲染，以完整图像叙事帮助产品建立更清晰的商业感知。</p><p>独立完成产品建模、渲染、后期精修与 AI 辅助图像创作。</p></div>
+      </div>
+      <div className="about-contact-bottom">
+        <div><span>LET’S WORK TOGETHER</span><a className="about-contact-mail" href="mailto:894068734@qq.com">894068734@qq.com <Arrow /></a></div>
+        <div className="about-contact-meta"><span>YONG QI · VISUAL DESIGNER</span><span>© 2026</span></div>
+      </div>
+    </footer>
     {modal && <div className={`lightbox ${modalZoom ? `is-zoomed zoom-${modalZoom}` : ""} ${modalTall ? "is-long" : ""}`} role="dialog" aria-modal="true" aria-label={modal.alt} onClick={() => setModal(null)}><button type="button" onClick={() => setModal(null)} aria-label="关闭大图">×</button><img src={modal.src} alt={modal.alt} onLoad={(event) => setModalTall(event.currentTarget.naturalHeight / event.currentTarget.naturalWidth > 2.2)} onClick={(event) => { event.stopPropagation(); setModalZoom((value) => value === 3 ? 0 : value + 1); }} /><span className="zoom-hint">{modalZoom === 0 ? "再次点击图片放大" : modalZoom === 3 ? "再次点击回到适屏" : `再次点击继续放大 · ${modalZoom}/3`}</span></div>}
   </main>;
 }
