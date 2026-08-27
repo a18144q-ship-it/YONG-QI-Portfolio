@@ -1,15 +1,42 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { PointerEvent as ReactPointerEvent } from "react";
+import type { PointerEvent as ReactPointerEvent, SyntheticEvent as ReactSyntheticEvent } from "react";
 
 const asset = (folder: string, number: number) => `/v2/${folder}/${String(number).padStart(2, "0")}.webp`;
 const mobileAsset = (src: string) => `/mobile${src.replace(/\.(?:png|jpe?g|webp|gif)$/i, ".webp")}`;
+const retryAsset = (src: string, attempt: number) => `${src}${src.includes("?") ? "&" : "?"}retry=${attempt}`;
+
+function retryResponsiveImage(event: ReactSyntheticEvent<HTMLImageElement>, desktopSrc: string) {
+  const image = event.currentTarget;
+  const picture = image.closest("picture");
+  const mobileSource = picture?.querySelector<HTMLSourceElement>('source[media="(max-width: 900px)"]');
+  const attempt = Number(image.dataset.retryAttempt || "0") + 1;
+  image.dataset.retryAttempt = String(attempt);
+
+  if (attempt <= 2) {
+    window.setTimeout(() => {
+      if (!image.isConnected) return;
+      if (mobileSource && window.matchMedia(mobileSource.media).matches) {
+        mobileSource.srcset = retryAsset(mobileAsset(desktopSrc), attempt);
+      } else {
+        image.src = retryAsset(desktopSrc, attempt);
+      }
+    }, attempt * 350);
+    return;
+  }
+
+  if (mobileSource && window.matchMedia(mobileSource.media).matches) {
+    mobileSource.media = "not all";
+    mobileSource.srcset = "";
+    image.src = retryAsset(desktopSrc, attempt);
+  }
+}
 
 function ResponsiveImage({ src, alt, loading = "lazy", ariaHidden = false, className = "" }: { src: string; alt: string; loading?: "eager" | "lazy"; ariaHidden?: boolean; className?: string }) {
   return <picture className={`responsive-picture ${className}`}>
     <source media="(max-width: 900px)" srcSet={mobileAsset(src)} />
-    <img src={src} alt={alt} loading={loading} decoding="async" aria-hidden={ariaHidden || undefined} />
+    <img src={src} alt={alt} loading={loading} decoding="async" aria-hidden={ariaHidden || undefined} onError={(event) => retryResponsiveImage(event, src)} />
   </picture>;
 }
 
@@ -504,7 +531,10 @@ export default function Home() {
     root.style.overflow = "hidden";
 
     const mobile = window.matchMedia("(max-width: 900px)").matches;
-    const pictureSources = Array.from(document.querySelectorAll<HTMLPictureElement>("picture")).map((picture) => {
+    const hashTarget = window.location.hash ? document.getElementById(window.location.hash.slice(1)) : null;
+    const priorityRoot = hashTarget || document.getElementById("cases");
+    const priorityPictures = Array.from(priorityRoot?.querySelectorAll<HTMLPictureElement>("picture") || []).slice(0, 2);
+    const pictureSources = priorityPictures.map((picture) => {
       const source = mobile ? picture.querySelector<HTMLSourceElement>('source[media="(max-width: 900px)"]') : null;
       const image = picture.querySelector<HTMLImageElement>("img");
       return source?.srcset || image?.src || "";
@@ -518,21 +548,30 @@ export default function Home() {
       if (!cancelled) setLoadProgress(Math.round((completed / Math.max(1, sources.length)) * 100));
     };
     const preload = (source: string) => new Promise<void>((resolve) => {
-      const image = new Image();
-      let settled = false;
-      let timeout = 0;
-      const settle = () => {
-        if (settled) return;
-        settled = true;
-        window.clearTimeout(timeout);
-        advance();
-        resolve();
+      let attempt = 0;
+      const load = () => {
+        const image = new Image();
+        let settled = false;
+        let timeout = 0;
+        const settle = (loaded: boolean) => {
+          if (settled) return;
+          settled = true;
+          window.clearTimeout(timeout);
+          if (!loaded && attempt < 1) {
+            attempt += 1;
+            window.setTimeout(load, 350);
+            return;
+          }
+          advance();
+          resolve();
+        };
+        timeout = window.setTimeout(() => settle(false), 8000);
+        image.onload = () => settle(true);
+        image.onerror = () => settle(false);
+        image.src = attempt ? retryAsset(source, attempt) : source;
+        if (image.complete && image.naturalWidth > 0) settle(true);
       };
-      timeout = window.setTimeout(settle, 30000);
-      image.onload = settle;
-      image.onerror = settle;
-      image.src = source;
-      if (image.complete) settle();
+      load();
     });
 
     Promise.all(sources.map(preload)).then(() => {

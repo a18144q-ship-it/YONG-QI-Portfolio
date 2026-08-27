@@ -192,5 +192,10 @@ test("keeps the editorial opening system shared and ratio-safe", async () => {
   assert.match(css, /\.aure-case-intro,\.aure-case-intro\.ssww-case-intro\{[^}]*grid-template-columns:1fr[^}]*grid-template-rows:minmax\(170px,30%\) minmax\(0,70%\)/);
   assert.match(css, /\.crossborder-strategy-strip\{[^}]*grid-template-columns:1fr[^}]*grid-template-rows:minmax\(165px,31%\) minmax\(0,69%\)/);
   assert.match(page, /video\.volume = 0/);
+  assert.doesNotMatch(page, /document\.querySelectorAll<HTMLPictureElement>\("picture"\)/);
+  assert.match(page, /querySelectorAll<HTMLPictureElement>\("picture"\).*\.slice\(0, 2\)/);
+  assert.match(page, /function retryResponsiveImage/);
+  assert.match(page, /mobileSource\.media = "not all"/);
+  assert.match(page, /timeout = window\.setTimeout\(\(\) => settle\(false\), 8000\)/);
   assert.match(layout, /YONG QI — Portfolio 2026/);
 });
