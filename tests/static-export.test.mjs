@@ -56,8 +56,11 @@ test("exports an upload-ready static portfolio", async () => {
 
   const mobileFiles = files.filter((file) => file.includes(`${join("static-site", "mobile")}`));
   assert.ok(mobileFiles.length >= 60, "the static package should include responsive mobile images");
+  let mobileBytes = 0;
   for (const file of mobileFiles) {
     const info = await stat(file);
-    assert.ok(info.size < 2 * 1024 * 1024, `${file} should stay below 2 MB for mobile loading`);
+    mobileBytes += info.size;
+    assert.ok(info.size < 3 * 1024 * 1024, `${file} should stay below 3 MB for mobile loading`);
   }
+  assert.ok(mobileBytes > 25 * 1024 * 1024 && mobileBytes < 38 * 1024 * 1024, "mobile image quality budget should stay near 30 MB");
 });

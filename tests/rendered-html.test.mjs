@@ -31,6 +31,8 @@ test("server-renders the complete portfolio case openings", async () => {
   assert.match(html, /\/v2\/crossborder\/truck-roll-bar\/strategy-hero\.jpg/);
   assert.match(html, /srcSet="\/mobile\/v2\/crossborder\/truck-roll-bar\/strategy-hero\.webp"/);
   assert.match(html, /poster="\/portfolio-ufo-cover\.jpg"/);
+  assert.match(html, /class="site-loader /);
+  assert.match(html, /role="progressbar"/);
   assert.match(html, /产品渲染/);
   assert.match(html, /生成图像/);
   assert.match(html, /\/illustrations\/sticker-ssww-bath\.png/);
@@ -186,5 +188,9 @@ test("keeps the editorial opening system shared and ratio-safe", async () => {
   assert.match(css, /\.hero-editorial\{[^}]*height:100svh[^}]*grid-template-columns:minmax\(0,\.84fr\) minmax\(0,1\.16fr\)/);
   assert.match(css, /\.crossborder-showcase\{grid-template-columns:minmax\(0,2fr\) minmax\(80px,\.72fr\)/);
   assert.match(css, /\.project-opening-facts\{grid-template-columns:repeat\(4,minmax\(0,1fr\)\)/);
+  assert.match(css, /\.site-loader\{[^}]*position:fixed[^}]*z-index:9999/);
+  assert.match(css, /\.aure-case-intro,\.aure-case-intro\.ssww-case-intro\{[^}]*grid-template-columns:1fr[^}]*grid-template-rows:minmax\(170px,30%\) minmax\(0,70%\)/);
+  assert.match(css, /\.crossborder-strategy-strip\{[^}]*grid-template-columns:1fr[^}]*grid-template-rows:minmax\(165px,31%\) minmax\(0,69%\)/);
+  assert.match(page, /video\.volume = 0/);
   assert.match(layout, /YONG QI — Portfolio 2026/);
 });

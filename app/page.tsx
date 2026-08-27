@@ -491,7 +491,67 @@ export default function Home() {
   const [modal, setModal] = useState<{ src: string; alt: string } | null>(null);
   const [modalZoom, setModalZoom] = useState(0);
   const [modalTall, setModalTall] = useState(false);
+  const [loadProgress, setLoadProgress] = useState(0);
+  const [siteReady, setSiteReady] = useState(false);
   const open = (src: string, alt: string) => { setModalZoom(0); setModalTall(false); setModal({ src, alt }); };
+
+  useEffect(() => {
+    let cancelled = false;
+    let finishTimer = 0;
+    const startedAt = Date.now();
+    const root = document.documentElement;
+    const previousOverflow = root.style.overflow;
+    root.style.overflow = "hidden";
+
+    const mobile = window.matchMedia("(max-width: 900px)").matches;
+    const pictureSources = Array.from(document.querySelectorAll<HTMLPictureElement>("picture")).map((picture) => {
+      const source = mobile ? picture.querySelector<HTMLSourceElement>('source[media="(max-width: 900px)"]') : null;
+      const image = picture.querySelector<HTMLImageElement>("img");
+      return source?.srcset || image?.src || "";
+    });
+    const posterSources = Array.from(document.querySelectorAll<HTMLVideoElement>("video[poster]")).map((video) => video.poster);
+    const sources = [...new Set([...pictureSources, ...posterSources].filter(Boolean))];
+    let completed = 0;
+
+    const advance = () => {
+      completed += 1;
+      if (!cancelled) setLoadProgress(Math.round((completed / Math.max(1, sources.length)) * 100));
+    };
+    const preload = (source: string) => new Promise<void>((resolve) => {
+      const image = new Image();
+      let settled = false;
+      let timeout = 0;
+      const settle = () => {
+        if (settled) return;
+        settled = true;
+        window.clearTimeout(timeout);
+        advance();
+        resolve();
+      };
+      timeout = window.setTimeout(settle, 30000);
+      image.onload = settle;
+      image.onerror = settle;
+      image.src = source;
+      if (image.complete) settle();
+    });
+
+    Promise.all(sources.map(preload)).then(() => {
+      if (cancelled) return;
+      setLoadProgress(100);
+      const minimumDisplay = Math.max(160, 520 - (Date.now() - startedAt));
+      finishTimer = window.setTimeout(() => {
+        if (cancelled) return;
+        setSiteReady(true);
+        root.style.overflow = previousOverflow;
+      }, minimumDisplay);
+    });
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(finishTimer);
+      root.style.overflow = previousOverflow;
+    };
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {
@@ -553,19 +613,36 @@ export default function Home() {
   useEffect(() => {
     const video = heroVideoRef.current;
     if (!video) return;
+    const silence = () => {
+      video.defaultMuted = true;
+      video.muted = true;
+      video.volume = 0;
+    };
     const resume = () => {
+      silence();
       if (!document.hidden) void video.play().catch(() => undefined);
     };
+    silence();
     resume();
+    video.addEventListener("volumechange", silence);
     document.addEventListener("visibilitychange", resume);
     window.addEventListener("focus", resume);
     return () => {
+      video.removeEventListener("volumechange", silence);
       document.removeEventListener("visibilitychange", resume);
       window.removeEventListener("focus", resume);
     };
   }, []);
 
-  return <main>
+  return <>
+    <div className={`site-loader ${siteReady ? "is-complete" : ""}`} role="status" aria-live="polite" aria-label={`作品集加载中 ${loadProgress}%`}>
+      <div className="site-loader-panel">
+        <div className="site-loader-meta"><span>YQ · PORTFOLIO</span><b>{String(loadProgress).padStart(2, "0")}%</b></div>
+        <div className="site-loader-track" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={loadProgress}><i style={{ transform: `scaleX(${loadProgress / 100})` }} /></div>
+        <p>LOADING VISUAL ARCHIVE · 正在载入作品</p>
+      </div>
+    </div>
+  <main className={siteReady ? "site-ready" : "site-preparing"} aria-busy={!siteReady}>
     <div ref={cursorRef} className="cursor-follower" aria-hidden="true" />
     <nav className="nav" aria-label="主导航"><a className="brand" href="#top">YQ<span>·</span></a><div className="nav-links"><a href="#cases">CASES</a><a href="#about">ABOUT</a><a href="#contact">CONTACT</a></div><span className="availability"><i /> PORTFOLIO 2026</span></nav>
 
@@ -628,5 +705,5 @@ export default function Home() {
       </div>
     </footer>
     {modal && <div className={`lightbox ${modalZoom ? `is-zoomed zoom-${modalZoom}` : ""} ${modalTall ? "is-long" : ""}`} role="dialog" aria-modal="true" aria-label={modal.alt} onClick={() => setModal(null)}><button type="button" onClick={() => setModal(null)} aria-label="关闭大图">×</button><img src={modal.src} alt={modal.alt} onLoad={(event) => setModalTall(event.currentTarget.naturalHeight / event.currentTarget.naturalWidth > 2.2)} onClick={(event) => { event.stopPropagation(); setModalZoom((value) => value === 3 ? 0 : value + 1); }} /><span className="zoom-hint">{modalZoom === 0 ? "再次点击图片放大" : modalZoom === 3 ? "再次点击回到适屏" : `再次点击继续放大 · ${modalZoom}/3`}</span></div>}
-  </main>;
+  </main></>;
 }
