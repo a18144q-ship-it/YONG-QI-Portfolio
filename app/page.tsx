@@ -184,7 +184,7 @@ function ProjectOpening({ index, category, title, subtitle, summary, facts, imag
         <h2>{title}<br /><em>{subtitle}</em></h2>
         <p className="project-opening-summary">{summary}</p>
       </div>
-      <div className={`project-opening-artwork ${artworkClass} ${mirror ? "" : "is-unmirrored"}`} aria-hidden="true"><img src={image} alt="" /></div>
+      <div className={`project-opening-artwork ${artworkClass} ${mirror ? "" : "is-unmirrored"}`} aria-hidden="true"><img src={image} alt="" loading="lazy" decoding="async" /></div>
     </div>
     <dl className="project-opening-facts">{facts.map((fact) => <div key={fact.label}><dt>{fact.label}</dt><dd>{fact.value}</dd></div>)}</dl>
   </header>;
@@ -234,7 +234,7 @@ function DirectoryCarousel() {
             }
           }}
         >
-          <div className="tile-art"><img src={item.image} alt="" /></div>
+          <div className="tile-art"><img src={item.image} alt="" loading="lazy" decoding="async" /></div>
           <div className="carousel-card-top"><span><b>{item.id}</b> / CASE</span></div>
           <div className="tile-label"><h3>{item.title}</h3><p>{item.sub}</p><Arrow /></div>
         </a>;
@@ -321,7 +321,7 @@ function AureCaseIntro() {
     { label: "TOOLS / 工作方法", value: "C4D · Octane · PS · AI 辅助" },
   ]} /><div className="aure-case-intro reveal">
     <figure className="aure-hero-visual">
-      <img src={asset("aure", 1)} alt="佩戴 AURE Buds Pro 的人物置身超自然山野" />
+      <img src={asset("aure", 1)} alt="佩戴 AURE Buds Pro 的人物置身超自然山野" loading="lazy" decoding="async" />
       <figcaption><span>BRAND WORLD · 01</span><b>Listen beyond noise.</b></figcaption>
     </figure>
     <article className="aure-strategy-panel">
@@ -371,7 +371,7 @@ function AureDesignSystem() {
       <p>以深海蓝建立静谧边界，琥珀暖光聚焦声学结构，银黑金属强化精密与高端感。核心画面以 C4D + Octane 搭建，并结合 AI 完成情绪环境延展。</p>
     </div>
     <figure className="aure-product-cutout">
-      <img src="/v2/aure/aure-product-cutout.png" alt="AURE Buds Pro 黑色金属耳机与充电盒产品图" />
+      <img src="/v2/aure/aure-product-cutout.png" alt="AURE Buds Pro 黑色金属耳机与充电盒产品图" loading="lazy" decoding="async" />
       <figcaption><span>AURE BUDS PRO</span><b>Graphite finish · Product form</b></figcaption>
     </figure>
   </section>;
@@ -385,7 +385,7 @@ function SswwCaseIntro() {
     { label: "TOOLS / 工作方法", value: "C4D · Octane · PS · AI 辅助" },
   ]} /><div className="aure-case-intro ssww-case-intro reveal">
     <figure className="aure-hero-visual ssww-hero-visual">
-      <img src={asset("ssww", 1)} alt="SSWW 按摩浴缸与暖调浴室生活场景" />
+      <img src={asset("ssww", 1)} alt="SSWW 按摩浴缸与暖调浴室生活场景" loading="lazy" decoding="async" />
       <figcaption><span>BRAND WORLD · 02</span><b>A warm ritual, made personal.</b></figcaption>
     </figure>
     <article className="aure-strategy-panel ssww-strategy-panel">
@@ -435,7 +435,7 @@ function SswwDesignSystem() {
       <p>场景以 C4D + Octane 搭建渲染，结合 PS 精修控制材质与光感；人物和环境通过 AI 辅助延展，使产品功能、空间体验与生活方式形成统一叙事。</p>
     </div>
     <figure className="aure-product-cutout ssww-product-cutout">
-      <img src="/v2/ssww/ssww-bath-cutout.png" alt="SSWW 白色按摩浴缸透明背景产品图" />
+      <img src="/v2/ssww/ssww-bath-cutout.png" alt="SSWW 白色按摩浴缸透明背景产品图" loading="lazy" decoding="async" />
       <figcaption><span>SSWW MASSAGE BATH</span><b>Porcelain white · Product form</b></figcaption>
     </figure>
   </section>;
@@ -444,7 +444,7 @@ function SswwDesignSystem() {
 function CrossborderStrategyStrip() {
   return <section className="crossborder-strategy-strip reveal" aria-label="皮卡防滚架项目策略概览">
     <figure>
-      <img src="/v2/crossborder/truck-roll-bar/strategy-hero.jpg" alt="海岸公路场景中的皮卡防滚架" />
+      <img src="/v2/crossborder/truck-roll-bar/strategy-hero.jpg" alt="海岸公路场景中的皮卡防滚架" loading="lazy" decoding="async" />
       <figcaption><span>BRAND WORLD · 03</span><b>Built for the journey.</b></figcaption>
     </figure>
     <div className="crossborder-strategy-copy">
@@ -473,7 +473,7 @@ function CrossborderGallery({ onOpen }: { onOpen: (src: string, alt: string) => 
     <div className="crossborder-square-grid">
       {squareImages.map((image) => <ZoomImage key={image.file} src={`/v2/crossborder/truck-roll-bar/${image.file}`} alt={image.alt} onOpen={onOpen} />)}
     </div>
-    <ZoomImage className="crossborder-a-plus" src="/v2/crossborder/truck-roll-bar/a-plus.png" alt="皮卡防滚架 Amazon A+ 完整页面" onOpen={onOpen} />
+    <ZoomImage className="crossborder-a-plus" src="/v2/crossborder/truck-roll-bar/a-plus.jpg" alt="皮卡防滚架 Amazon A+ 完整页面" onOpen={onOpen} />
   </div>;
 }
 
@@ -568,7 +568,7 @@ export default function Home() {
         <div className="hero-bottom"><p>产品视觉 · 三维渲染 · AI 图像</p><a href="#cases" className="circle-link" aria-label="查看案例"><Arrow /></a></div>
       </div>
       <div className="hero-art reveal">
-        <video ref={heroVideoRef} autoPlay loop muted playsInline preload="auto" poster="/portfolio-ufo-cover.png" aria-label="UFO 光束吸起奶牛与斑马的动态封面">
+        <video ref={heroVideoRef} autoPlay loop muted playsInline preload="metadata" poster="/portfolio-ufo-cover.jpg" aria-label="UFO 光束吸起奶牛与斑马的动态封面">
           <source src="/portfolio-ufo-cover.mp4" type="video/mp4" />
         </video>
       </div>

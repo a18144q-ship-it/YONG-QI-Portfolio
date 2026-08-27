@@ -33,7 +33,7 @@ test("exports an upload-ready static portfolio", async () => {
     "v2/renders/daily-care/perfume-motion.gif",
     "v2/aigc-process/set-02/03.webp",
     "v2/aigc-process/set-03/03.jpg",
-    "v2/crossborder/truck-roll-bar/a-plus.png",
+    "v2/crossborder/truck-roll-bar/a-plus.jpg",
     "v2/crossborder/truck-roll-bar/strategy-hero.jpg",
     "v2/crossborder/truck-roll-bar/01.jpg",
   ]) {

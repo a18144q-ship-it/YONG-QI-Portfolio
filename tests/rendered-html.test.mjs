@@ -27,7 +27,7 @@ test("server-renders the complete portfolio case openings", async () => {
   assert.match(html, /皮卡防滚架跨境电商视觉/);
   assert.match(html, /350 LBS 承重、防锈耐候、车型适配与载物拓展/);
   assert.match(html, /TRUCK ROLL BAR/);
-  assert.match(html, /\/v2\/crossborder\/truck-roll-bar\/a-plus\.png/);
+  assert.match(html, /\/v2\/crossborder\/truck-roll-bar\/a-plus\.jpg/);
   assert.match(html, /\/v2\/crossborder\/truck-roll-bar\/strategy-hero\.jpg/);
   assert.match(html, /产品渲染/);
   assert.match(html, /生成图像/);
@@ -181,5 +181,8 @@ test("keeps the editorial opening system shared and ratio-safe", async () => {
   assert.match(css, /translate3d\(var\(--tilt-move-x\)/);
   assert.match(css, /\.carousel-card \.tile-art\{[^}]*var\(--tilt-move-x\)/);
   assert.match(css, /grid-template-columns:repeat\(4,minmax\(0,1fr\)\)/);
+  assert.match(css, /\.hero-editorial\{[^}]*height:100svh[^}]*grid-template-columns:minmax\(0,\.84fr\) minmax\(0,1\.16fr\)/);
+  assert.match(css, /\.crossborder-showcase\{grid-template-columns:minmax\(0,2fr\) minmax\(80px,\.72fr\)/);
+  assert.match(css, /\.project-opening-facts\{grid-template-columns:repeat\(4,minmax\(0,1fr\)\)/);
   assert.match(layout, /YONG QI — Portfolio 2026/);
 });
