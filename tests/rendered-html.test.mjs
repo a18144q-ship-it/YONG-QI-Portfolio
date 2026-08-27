@@ -1,11 +1,6 @@
 import assert from "node:assert/strict";
-import { access, readFile, readdir } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
-
-const developmentPreviewMeta =
-  /<meta(?=[^>]*\bname=["']codex-preview["'])(?=[^>]*\bcontent=["']development["'])[^>]*>/i;
-const templateRoot = new URL("../", import.meta.url);
-const previewRoot = new URL("../app/_sites-preview/", import.meta.url);
 
 async function render() {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
@@ -13,75 +8,178 @@ async function render() {
   const { default: worker } = await import(workerUrl.href);
 
   return worker.fetch(
-    new Request("http://localhost/", {
-      headers: { accept: "text/html" },
-    }),
-    {
-      ASSETS: {
-        fetch: async () => new Response("Not found", { status: 404 }),
-      },
-    },
-    {
-      waitUntil() {},
-      passThroughOnException() {},
-    },
+    new Request("http://localhost/", { headers: { accept: "text/html" } }),
+    { ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) } },
+    { waitUntil() {}, passThroughOnException() {} },
   );
 }
 
-test("server-renders the starter loading skeleton", async () => {
+test("server-renders the complete portfolio case openings", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
-  assert.match(html, developmentPreviewMeta);
-  assert.match(html, /<title>Your site is taking shape<\/title>/i);
-  assert.match(html, /Codex is working/);
-  assert.match(html, /Your site is taking shape/);
-  assert.match(html, /Codex is building the first version/);
-  assert.match(html, /react-loading-skeleton/);
-  assert.match(html, /role="status"/);
+  assert.match(html, /<title>YONG QI — Portfolio 2026<\/title>/i);
+  assert.match(html, /耳机详情视觉/);
+  assert.match(html, /卫浴详情视觉/);
+  assert.match(html, /皮卡防滚架视觉/);
+  assert.match(html, /皮卡防滚架跨境电商视觉/);
+  assert.match(html, /350 LBS 承重、防锈耐候、车型适配与载物拓展/);
+  assert.match(html, /TRUCK ROLL BAR/);
+  assert.match(html, /\/v2\/crossborder\/truck-roll-bar\/a-plus\.png/);
+  assert.match(html, /\/v2\/crossborder\/truck-roll-bar\/strategy-hero\.jpg/);
+  assert.match(html, /产品渲染/);
+  assert.match(html, /生成图像/);
+  assert.match(html, /\/illustrations\/sticker-ssww-bath\.png/);
+  assert.match(html, /\/illustrations\/sticker-product-knight\.png/);
+  assert.equal((html.match(/<img src="\/illustrations\/sticker-aigc-office\.png"/g) ?? []).length, 2);
+  assert.doesNotMatch(html, /\/illustrations\/ufo-earbud\.webp/);
+  assert.equal((html.match(/class="strategy-textures"/g) ?? []).length, 2);
+  assert.match(html, /Better Call <span>Zhou<\/span>/);
+  assert.match(html, /<h3>产品场景生成<\/h3>/);
+  assert.doesNotMatch(html, /<h3>活动视觉<\/h3>/);
+  assert.doesNotMatch(html, /Campaign Posters &amp; Layout Studies/);
+  assert.match(html, /<h3>独立浴缸<\/h3>/);
+  assert.match(html, /Freestanding Bath/);
+  for (const image of [7, 8, 9, 10]) assert.match(html, new RegExp(`/v2/ssww/${String(image).padStart(2, "0")}\\.webp`));
+  assert.doesNotMatch(html, /沙发产品 AI 短片/);
+  assert.doesNotMatch(html, /green-lounge-silent\.mp4/);
+  assert.doesNotMatch(html, /AI PRODUCT FILM/);
+  assert.equal((html.match(/class="ai-process-item is-(?:landscape|portrait)/g) ?? []).length, 9);
+  assert.equal((html.match(/class="ai-process-board"/g) ?? []).length, 1);
+  assert.equal((html.match(/class="ai-process-vehicle-group"/g) ?? []).length, 2);
+  assert.match(html, /产品场景生成流程/);
+  assert.match(html, /红色越野车/);
+  assert.match(html, /蓝色皮卡/);
+  assert.match(html, /户外风扇/);
+  assert.doesNotMatch(html, /汽车前杠/);
+  assert.doesNotMatch(html, /手持风扇/);
+  assert.doesNotMatch(html, /PROCESS SET/);
+  assert.match(html, /\/v2\/aigc-process\/set-02\/03\.webp/);
+  assert.match(html, /\/v2\/aigc-process\/set-03\/03\.jpg/);
+  assert.match(html, /单品渲染/);
+  assert.doesNotMatch(html, /<h3>机械腕表<\/h3>/);
+  assert.match(html, /\/v2\/renders\/watch\/detail-01\.webp/);
+  assert.match(html, /\/v2\/renders\/watch\/detail-02\.webp/);
+  assert.match(html, /4 个系列 · 24 幅作品/);
+  assert.doesNotMatch(html, /概念场景/);
+  assert.doesNotMatch(html, /CONCEPT SCENE/);
+  assert.match(html, /日化品渲染/);
+  assert.match(html, /产品建模白模展示/);
+  assert.doesNotMatch(html, /白模与建模研究/);
+  assert.match(html, /\/v2\/renders\/daily-care\/perfume-motion\.gif/);
+  assert.match(html, /家居渲染/);
+  assert.doesNotMatch(html, /\/v2\/renders\/18\.webp/);
+  assert.doesNotMatch(html, /\/v2\/renders\/23\.webp/);
+  assert.doesNotMatch(html, /\/v2\/renders\/11\.webp/);
+  assert.doesNotMatch(html, /\/v2\/renders\/13\.webp/);
+  assert.doesNotMatch(html, /\/v2\/renders\/14\.webp/);
+  assert.doesNotMatch(html, /\/v2\/renders\/17\.webp/);
+  assert.doesNotMatch(html, /\/v2\/renders\/16\.webp/);
+  assert.doesNotMatch(html, /\/v2\/renders\/20\.webp/);
+  assert.doesNotMatch(html, /\/v2\/renders\/22\.webp/);
+  assert.doesNotMatch(html, /\/v2\/renders\/29\.webp/);
+  assert.doesNotMatch(html, /\/v2\/renders\/25\.webp/);
+  assert.doesNotMatch(html, /\/v2\/renders\/28\.webp/);
+  assert.match(html, /\/v2\/renders\/21\.webp/);
+  assert.match(html, /\/v2\/renders\/30\.webp/);
+  assert.match(html, /\/v2\/renders\/home\/green-sofa\.webp/);
+  assert.equal((html.match(/<header class="project-opening project-opening-/g) ?? []).length, 5);
+  assert.equal((html.match(/class="project-opening-facts"/g) ?? []).length, 5);
+  assert.match(html, /<svg class="heading-spots" viewBox="0 0 480 160" preserveAspectRatio="xMidYMid meet"/);
+  assert.doesNotMatch(html, /class="split-intro/);
 });
 
-test("keeps the loading skeleton scoped and disposable", async () => {
-  const [preview, css, page, layout, packageJson, files] = await Promise.all([
-    readFile(new URL("SkeletonPreview.tsx", previewRoot), "utf8"),
-    readFile(new URL("preview.css", previewRoot), "utf8"),
+test("keeps the editorial opening system shared and ratio-safe", async () => {
+  const [page, css, layout] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../package.json", import.meta.url), "utf8"),
-    readdir(previewRoot),
   ]);
 
-  assert.deepEqual(files.sort(), ["SkeletonPreview.tsx", "preview.css"]);
-  assert.match(preview, /from "react-loading-skeleton"/);
-  assert.match(preview, /baseColor="#eceae7"/);
-  assert.match(preview, /highlightColor="#f9f8f6"/);
-  assert.match(preview, /duration=\{2\.8\}/);
-  assert.match(preview, /sites-skeleton-search-placeholder/);
-  assert.match(packageJson, /"react-loading-skeleton": "3\.5\.0"/);
-
-  const shellIndex = preview.indexOf('className="sites-skeleton-shell"');
-  const statusIndex = preview.indexOf('className="sites-skeleton-status"');
-  assert.ok(shellIndex >= 0 && statusIndex > shellIndex);
-  assert.match(css, /position:\s*fixed/);
-  assert.match(css, /inset:\s*0/);
-  assert.match(css, /opacity:\s*0\.52/);
-  assert.match(css, /prefers-reduced-motion:\s*reduce/);
-  assert.doesNotMatch(css, /#020617|canvas|pets|progress/i);
-  assert.doesNotMatch(
-    preview,
-    /loading-spinner|status-mark|status-progress|canvas|cookie|random/i,
-  );
-
-  assert.match(page, /export const metadata:\s*Metadata/);
-  assert.match(page, /"codex-preview": "development"/);
-  assert.match(page, /<SkeletonPreview \/>/);
-  assert.match(layout, /title:\s*"Starter Project"/);
-  assert.doesNotMatch(layout, /codex-preview|_sites-preview|themeColor|\bViewport\b/);
-  assert.doesNotMatch(css, /(^|\s)(html|body)\s*\{/m);
-
-  await assert.rejects(
-    access(new URL("public/_sites-preview", templateRoot)),
-  );
+  assert.match(page, /function ProjectOpening/);
+  assert.match(page, /function HeadingSpots/);
+  assert.match(page, /function AiImageProcess/);
+  assert.match(page, /function updateImageTilt/);
+  assert.match(page, /function beginImageTilt/);
+  assert.match(page, /activeImageTiltSession/);
+  assert.match(page, /const bounds = element\.getBoundingClientRect\(\)/);
+  assert.match(page, /window\.addEventListener\("pointermove", track, \{ passive: true \}\)/);
+  assert.doesNotMatch(page, /onPointerLeave=\{resetImageTilt\}/);
+  assert.match(page, /function updateStickerTilt/);
+  assert.match(page, /classList\.add\("is-visible"\)/);
+  assert.match(page, /observer\.unobserve\(entry\.target\)/);
+  assert.doesNotMatch(page, /classList\.toggle\("is-visible", entry\.isIntersecting\)/);
+  assert.match(page, /rootMargin: "0px 0px -6% 0px"/);
+  assert.match(page, /function resetStickerTilt/);
+  assert.match(page, /querySelectorAll<HTMLElement>\("\.project-opening-artwork\.is-sticker-artwork"\)/);
+  assert.match(page, /window\.requestAnimationFrame\(render\)/);
+  assert.match(page, /window\.addEventListener\("pointermove", track/);
+  assert.equal((page.match(/onPointerEnter=\{beginImageTilt\}/g) ?? []).length, 2);
+  assert.equal((page.match(/onPointerMove=\{updateImageTilt\}/g) ?? []).length, 2);
+  assert.match(page, /className="zoom-image-tilt-frame"/);
+  assert.match(page, /--tilt-x/);
+  assert.match(page, /--tilt-move-x/);
+  assert.equal((page.match(/<ProjectOpening index=/g) ?? []).length, 5);
+  assert.doesNotMatch(page, /function ProjectHeading/);
+  assert.doesNotMatch(page, /render-heading-spots/);
+  assert.equal((page.match(/className="strategy-textures"/g) ?? []).length, 2);
+  assert.doesNotMatch(page, /system-doodle/);
+  assert.match(css, /\.heading-spots\{[^}]*aspect-ratio:3\/1/);
+  assert.match(css, /\.ai-process-grid\{[^}]*grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
+  assert.match(css, /\.ai-process-image\{[^}]*aspect-ratio:4\/3/);
+  assert.match(css, /\.ai-process-item\.is-portrait \.ai-process-image\{aspect-ratio:3\/4/);
+  assert.match(css, /\.ai-process-vehicle-row\{[^}]*grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
+  assert.match(css, /\.ai-process-feature-grid\{[^}]*grid-template-columns:minmax\(0,\.75fr\) minmax\(0,1\.25fr\)/);
+  assert.match(css, /\.ai-process-feature-item:nth-child\(3\)\{[^}]*grid-column:2[^}]*grid-row:1\/span 2/);
+  assert.match(css, /main \.case-section \.zoom-image\.reveal\.is-visible:hover,[\s\S]*?transform:none/);
+  assert.match(css, /main \.case-section \.zoom-image\.reveal\.is-visible>\.zoom-image-tilt-frame\{[^}]*pointer-events:none[^}]*rotateX\(var\(--tilt-x\)\)[^}]*rotateY\(var\(--tilt-y\)\)/);
+  assert.match(css, /\.crossborder-strategy-strip\{[^}]*gap:clamp\(14px,1\.5vw,24px\)[^}]*border:0/);
+  assert.match(css, /\.crossborder-strategy-strip>figure,\.crossborder-strategy-copy\{[^}]*border:0[^}]*border-radius:clamp\(12px,1\.1vw,20px\)/);
+  assert.match(css, /\.project-opening-facts\{/);
+  assert.match(css, /\.project-opening-artwork\.is-sticker-artwork/);
+  assert.match(css, /--sticker-shadow-x/);
+  assert.match(css, /--sticker-glint-x/);
+  assert.doesNotMatch(css, /--sticker-glint-angle/);
+  assert.match(css, /mask-image:var\(--sticker-image\)/);
+  assert.match(css, /\.project-opening-artwork\.is-sticker-artwork::after\{[^}]*radial-gradient/);
+  assert.doesNotMatch(css, /\.project-opening-artwork\.is-sticker-artwork::before\{/);
+  assert.match(css, /\.ai-process-product-title\{/);
+  assert.match(css, /\.about-contact-section \.about-contact-signature/);
+  assert.match(css, /\.about-contact-section \.about-contact-signature\{[^}]*white-space:nowrap/);
+  assert.match(css, /\.about-contact-main\{grid-template-columns:minmax\(0,1fr\)/);
+  assert.match(css, /\.about-contact-main \.about-contact-copy\{[^}]*justify-self:end/);
+  assert.doesNotMatch(css, /\.ai-process-puzzle\{/);
+  assert.doesNotMatch(css, /\.ai-process-board\.is-portrait/);
+  assert.match(css, /\.layout-product-study \.zoom-image:nth-child\(n\+4\)\{[^}]*grid-column:span 4;aspect-ratio:4\/3/);
+  assert.match(page, /className="render-mosaic layout-home home-bento-grid"/);
+  assert.match(page, /images: \[9, 10, \{ src: "\/v2\/renders\/home\/green-sofa\.webp"[^}]+\}, 21, 19, 27, 24, 30\], layout: "home"/);
+  assert.doesNotMatch(page, /home-render-row/);
+  assert.match(css, /\.render-mosaic\.layout-home\{[^}]*grid-template-columns:repeat\(4,minmax\(0,1fr\)\)[^}]*grid-auto-rows:clamp\(180px,26\.5cqw,390px\)/);
+  assert.match(css, /\.render-mosaic\.layout-home>\.zoom-image:nth-child\(1\)\{[^}]*grid-column:1\/span 2[^}]*grid-row:1\/span 2/);
+  assert.match(css, /\.render-mosaic\.layout-home>\.zoom-image:nth-child\(5\)\{[^}]*grid-column:3\/span 2[^}]*grid-row:3\/span 2/);
+  assert.match(css, /\.render-mosaic\.layout-home>\.zoom-image:nth-child\(8\)\{[^}]*grid-column:2[^}]*grid-row:4/);
+  assert.match(css, /\.layout-model-study \.zoom-image\{[^}]*aspect-ratio:1!important/);
+  assert.match(css, /\.model-group\{[^}]*width:min\(88vw,1500px\)/);
+  assert.match(css, /\.layout-model-study\{[^}]*grid-template-columns:repeat\(6,minmax\(0,1fr\)\)/);
+  assert.doesNotMatch(page, /sofa-row-stack/);
+  assert.doesNotMatch(page, /SofaWorkflow/);
+  assert.doesNotMatch(page, /sofaPhases/);
+  assert.match(css, /\.brand::before\{[^}]*linear-gradient/);
+  assert.match(css, /@keyframes depth-media-arrive/);
+  assert.match(css, /translate3d\(0,128px,-520px\)/);
+  assert.match(css, /\.ai-product-mosaic \.zoom-image\.reveal\.is-visible\{[^}]*animation:depth-media-arrive/);
+  assert.match(css, /\.aure-brand-strip:not\(\.ssww-brand-strip\)\{[^}]*grid-template-columns:minmax\(0,2\.1fr\) minmax\(280px,1fr\)/);
+  assert.match(css, /\.aure-brand-strip:not\(\.ssww-brand-strip\) \.aure-product-cutout::after\{[^}]*width:44px[^}]*clip-path:inset\(0 0 0 50%\)/);
+  assert.match(css, /\.ssww-brand-strip\{[^}]*grid-template-columns:minmax\(0,2\.1fr\) minmax\(280px,1fr\)/);
+  assert.match(css, /\.ssww-brand-strip \.ssww-product-cutout::after\{[^}]*width:44px[^}]*clip-path:inset\(0 0 0 50%\)/);
+  assert.match(css, /\.aure-case-intro,\.aure-case-intro\.ssww-case-intro\{height:clamp\(860px,55vw,900px\)/);
+  assert.match(css, /\.ssww-case-intro \.ssww-hero-visual img\{object-position:50% 82%\}/);
+  assert.doesNotMatch(css, /\.ai-process-piece:not\(:first-child\)::after/);
+  assert.match(css, /main \.case-section \.zoom-image\.reveal\.is-visible\{[^}]*rotateX\(var\(--tilt-x\)\) rotateY\(var\(--tilt-y\)\)/);
+  assert.match(css, /translate3d\(var\(--tilt-move-x\)/);
+  assert.match(css, /\.carousel-card \.tile-art\{[^}]*var\(--tilt-move-x\)/);
+  assert.match(css, /grid-template-columns:repeat\(4,minmax\(0,1fr\)\)/);
+  assert.match(layout, /YONG QI — Portfolio 2026/);
 });

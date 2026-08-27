@@ -9,8 +9,10 @@
     "dev": "set LOCAL_PREVIEW=1&& vinext dev",
     "dev:full": "vinext dev",
     "build": "vinext build",
+    "build:static": "node scripts/build-static.mjs",
     "start": "vinext start",
     "test": "npm run build && node --test tests/rendered-html.test.mjs",
+    "test:static": "npm run build:static && node --test tests/static-export.test.mjs",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "db:generate": "drizzle-kit generate"
   },

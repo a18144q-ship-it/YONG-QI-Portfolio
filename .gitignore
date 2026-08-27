@@ -38,6 +38,9 @@ yarn-error.log*
 # typescript
 next-env.d.ts
 /dist/
+/static-site/
 /.wrangler/
 /outputs/
 /work/
+/output/
+/打开作品集.ps1
