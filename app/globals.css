@@ -629,6 +629,35 @@ main .case-section .zoom-image:hover .zoom-image-tilt-frame:before{transform:tra
   .ai-process-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 7px}.ai-process-meta{gap:5px;padding-top:6px}.ai-process-meta>span{font-size:11px}.ai-process-meta h5{font-size:8px}.ai-process-meta p{font-size:5px}
 }
 
+/* V79 — reliable iPhone media loading, fixed light theme and compact unified color-system cards. */
+:root{color-scheme:only light}html,body{background:#f2eee5;color:#191916}.site-preparing{height:auto;overflow:visible}
+
+.aure-brand-strip:not(.ssww-brand-strip),.ssww-brand-strip{min-height:0;margin-bottom:clamp(42px,4vw,64px);grid-template-columns:minmax(0,2.55fr) minmax(210px,.75fr);gap:0;padding:0}
+.aure-brand-strip:not(.ssww-brand-strip){--brand-uniform:#111c29;background:var(--brand-uniform)}
+.ssww-brand-strip{--brand-uniform:#d9d3ca;background:var(--brand-uniform)}
+.aure-brand-strip:not(.ssww-brand-strip) .aure-palette-copy,.aure-brand-strip:not(.ssww-brand-strip) .aure-product-cutout,.ssww-brand-strip .aure-palette-copy,.ssww-brand-strip .ssww-product-cutout{background:transparent}
+.aure-brand-strip:not(.ssww-brand-strip) .aure-palette-copy,.ssww-brand-strip .aure-palette-copy{padding:clamp(13px,1vw,17px) clamp(26px,2.5vw,42px)}
+.aure-brand-strip:not(.ssww-brand-strip) .aure-product-cutout,.ssww-brand-strip .ssww-product-cutout{padding:clamp(10px,.8vw,14px) clamp(22px,2vw,34px)}
+.aure-brand-strip .aure-product-cutout::before,.aure-brand-strip .aure-product-cutout::after{display:none!important}
+.aure-brand-strip .aure-palette-copy header{padding-bottom:6px;font-size:7px}.aure-brand-strip .aure-palette-copy h3{margin:8px 0 7px;font-size:clamp(19px,1.7vw,29px)}
+.aure-brand-strip .aure-swatches{gap:clamp(9px,1.1vw,18px)}.aure-brand-strip .aure-swatch{min-width:64px}.aure-brand-strip .aure-swatch i{height:9px}
+.aure-brand-strip .aure-palette-copy>p{margin-top:7px;font-size:9px;line-height:1.45}.aure-brand-strip .aure-product-cutout img,.aure-brand-strip .ssww-product-cutout img{height:clamp(92px,7vw,118px)}
+.aure-brand-strip .aure-product-cutout figcaption{padding-top:5px;font-size:6px}
+
+@media(max-width:900px){
+  .hero-editorial{height:100dvh;min-height:520px;background:#f2eee5}.hero-editorial .hero-art{background:#f2eee5}
+  .hero-editorial .hero-art video{left:0;top:50%;inset:auto;width:100%;height:auto;max-height:100%;aspect-ratio:1/1;transform:translateY(-50%);object-fit:cover;object-position:center;background:#f2eee5;clip-path:inset(1px)}
+  .reveal,.reveal.is-visible,.render-mosaic .zoom-image.reveal,.render-mosaic .zoom-image.reveal.is-visible,.ai-product-mosaic .zoom-image.reveal,.ai-product-mosaic .zoom-image.reveal.is-visible{opacity:1;filter:none;transform:none;animation:none}
+  .aure-brand-strip:not(.ssww-brand-strip),.ssww-brand-strip{grid-template-columns:minmax(0,1.8fr) minmax(100px,.72fr);min-height:0;margin-bottom:34px}
+  .aure-brand-strip:not(.ssww-brand-strip) .aure-palette-copy,.ssww-brand-strip .aure-palette-copy{padding:14px 12px}
+  .aure-brand-strip:not(.ssww-brand-strip) .aure-product-cutout,.ssww-brand-strip .ssww-product-cutout{padding:12px 10px}
+  .aure-brand-strip .aure-palette-copy header{padding-bottom:5px;font-size:5px}.aure-brand-strip .aure-palette-copy header span{display:none}
+  .aure-brand-strip .aure-palette-copy h3,.ssww-brand-strip .aure-palette-copy h3{max-width:none;margin:7px 0 6px;font-size:15px;line-height:1.05}.aure-brand-strip .aure-palette-copy h3 em{display:inline;margin:0}
+  .aure-brand-strip .aure-swatches{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px 7px}.aure-brand-strip .aure-swatch{gap:2px 4px}.aure-brand-strip .aure-swatch i{height:6px}.aure-brand-strip .aure-swatch span,.aure-brand-strip .aure-swatch b{font-size:5px}
+  .aure-brand-strip .aure-palette-copy>p{max-width:none;margin-top:6px;font-size:6px;line-height:1.35}.aure-brand-strip .aure-product-cutout img,.aure-brand-strip .ssww-product-cutout img{height:92px}
+  .aure-brand-strip .aure-product-cutout figcaption{padding-top:4px;font-size:5px}.aure-brand-strip:after{display:none}
+}
+
 @media(max-width:560px){
   .project-opening-main{grid-template-columns:minmax(0,1.08fr) minmax(96px,.92fr)}.project-opening-summary{grid-column:auto}.project-opening-artwork{height:clamp(96px,29vw,126px)}
   .ai-process-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.render-mosaic.layout-home{grid-template-columns:repeat(2,minmax(0,1fr))}.render-mosaic.layout-home>.zoom-image:nth-child(n){grid-column:auto}.render-mosaic.layout-home>.zoom-image:nth-child(odd),.render-mosaic.layout-home>.zoom-image:nth-child(even){aspect-ratio:3/4}
@@ -654,3 +683,6 @@ main .case-section .zoom-image:hover .zoom-image-tilt-frame:before{transform:tra
   .crossborder-strategy-copy{height:100%;min-height:0;padding:16px 14px}.crossborder-strategy-copy>header{font-size:6px}.crossborder-strategy-copy>h3{margin:12px 0;font-size:24px}
   .crossborder-strategy-grid{height:calc(100% - 72px)}.crossborder-strategy-grid article:nth-child(n){min-height:0;padding:9px 8px}.crossborder-strategy-grid article>span{font-size:6px}.crossborder-strategy-grid article p{font-size:8px;line-height:1.45}
 }
+
+/* Keep the document measurable while the fixed loader prevents interaction; required by iOS image observers. */
+.site-preparing{height:auto;overflow:visible}

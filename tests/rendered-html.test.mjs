@@ -29,7 +29,7 @@ test("server-renders the complete portfolio case openings", async () => {
   assert.match(html, /TRUCK ROLL BAR/);
   assert.match(html, /\/v2\/crossborder\/truck-roll-bar\/a-plus\.jpg/);
   assert.match(html, /\/v2\/crossborder\/truck-roll-bar\/strategy-hero\.jpg/);
-  assert.match(html, /srcSet="\/mobile\/v2\/crossborder\/truck-roll-bar\/strategy-hero\.webp"/);
+  assert.match(html, /data-preload-src="\/mobile\/v2\/crossborder\/truck-roll-bar\/strategy-hero\.webp"/);
   assert.match(html, /poster="\/portfolio-ufo-cover\.jpg"/);
   assert.match(html, /class="site-loader /);
   assert.match(html, /role="progressbar"/);
@@ -37,7 +37,7 @@ test("server-renders the complete portfolio case openings", async () => {
   assert.match(html, /生成图像/);
   assert.match(html, /\/illustrations\/sticker-ssww-bath\.png/);
   assert.match(html, /\/illustrations\/sticker-product-knight\.png/);
-  assert.equal((html.match(/<img src="\/illustrations\/sticker-aigc-office\.png"/g) ?? []).length, 2);
+  assert.equal((html.match(/data-preload-src="\/illustrations\/sticker-aigc-office\.png"/g) ?? []).length, 2);
   assert.doesNotMatch(html, /\/illustrations\/ufo-earbud\.webp/);
   assert.equal((html.match(/class="strategy-textures"/g) ?? []).length, 2);
   assert.match(html, /Better Call <span>Zhou<\/span>/);
@@ -194,8 +194,14 @@ test("keeps the editorial opening system shared and ratio-safe", async () => {
   assert.match(page, /video\.volume = 0/);
   assert.doesNotMatch(page, /document\.querySelectorAll<HTMLPictureElement>\("picture"\)/);
   assert.match(page, /querySelectorAll<HTMLPictureElement>\("picture"\).*\.slice\(0, 2\)/);
-  assert.match(page, /function retryResponsiveImage/);
-  assert.match(page, /mobileSource\.media = "not all"/);
+  assert.match(page, /data-preload-src=\{mobileSrc\}/);
+  assert.match(page, /rootMargin: "900px 0px"/);
+  assert.match(page, /if \(!desktopFallback\) setDesktopFallback\(true\)/);
   assert.match(page, /timeout = window\.setTimeout\(\(\) => settle\(false\), 8000\)/);
+  assert.match(css, /:root\{color-scheme:only light\}/);
+  assert.match(css, /\.site-preparing\{height:auto;overflow:visible\}/);
+  assert.match(css, /\.aure-brand-strip \.aure-product-cutout::before,\.aure-brand-strip \.aure-product-cutout::after\{display:none!important\}/);
+  assert.match(css, /\.hero-editorial \.hero-art video\{left:0;top:50%;inset:auto;width:100%;height:auto/);
+  assert.match(layout, /colorScheme: "light"/);
   assert.match(layout, /YONG QI — Portfolio 2026/);
 });

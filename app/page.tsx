@@ -1,42 +1,53 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { PointerEvent as ReactPointerEvent, SyntheticEvent as ReactSyntheticEvent } from "react";
+import type { PointerEvent as ReactPointerEvent } from "react";
 
 const asset = (folder: string, number: number) => `/v2/${folder}/${String(number).padStart(2, "0")}.webp`;
 const mobileAsset = (src: string) => `/mobile${src.replace(/\.(?:png|jpe?g|webp|gif)$/i, ".webp")}`;
 const retryAsset = (src: string, attempt: number) => `${src}${src.includes("?") ? "&" : "?"}retry=${attempt}`;
-
-function retryResponsiveImage(event: ReactSyntheticEvent<HTMLImageElement>, desktopSrc: string) {
-  const image = event.currentTarget;
-  const picture = image.closest("picture");
-  const mobileSource = picture?.querySelector<HTMLSourceElement>('source[media="(max-width: 900px)"]');
-  const attempt = Number(image.dataset.retryAttempt || "0") + 1;
-  image.dataset.retryAttempt = String(attempt);
-
-  if (attempt <= 2) {
-    window.setTimeout(() => {
-      if (!image.isConnected) return;
-      if (mobileSource && window.matchMedia(mobileSource.media).matches) {
-        mobileSource.srcset = retryAsset(mobileAsset(desktopSrc), attempt);
-      } else {
-        image.src = retryAsset(desktopSrc, attempt);
-      }
-    }, attempt * 350);
-    return;
-  }
-
-  if (mobileSource && window.matchMedia(mobileSource.media).matches) {
-    mobileSource.media = "not all";
-    mobileSource.srcset = "";
-    image.src = retryAsset(desktopSrc, attempt);
-  }
-}
+const transparentPixel = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
 
 function ResponsiveImage({ src, alt, loading = "lazy", ariaHidden = false, className = "" }: { src: string; alt: string; loading?: "eager" | "lazy"; ariaHidden?: boolean; className?: string }) {
-  return <picture className={`responsive-picture ${className}`}>
-    <source media="(max-width: 900px)" srcSet={mobileAsset(src)} />
-    <img src={src} alt={alt} loading={loading} decoding="async" aria-hidden={ariaHidden || undefined} onError={(event) => retryResponsiveImage(event, src)} />
+  const pictureRef = useRef<HTMLPictureElement>(null);
+  const retryTimerRef = useRef(0);
+  const [active, setActive] = useState(loading === "eager");
+  const [retryAttempt, setRetryAttempt] = useState(0);
+  const [desktopFallback, setDesktopFallback] = useState(false);
+  const mobileSrc = mobileAsset(src);
+  const currentDesktopSrc = retryAttempt ? retryAsset(src, retryAttempt) : src;
+  const currentMobileSrc = retryAttempt ? retryAsset(mobileSrc, retryAttempt) : mobileSrc;
+
+  useEffect(() => {
+    if (active) return;
+    const picture = pictureRef.current;
+    if (!picture || !("IntersectionObserver" in window)) {
+      setActive(true);
+      return;
+    }
+    const observer = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      setActive(true);
+      observer.disconnect();
+    }, { rootMargin: "900px 0px", threshold: 0.01 });
+    observer.observe(picture);
+    return () => observer.disconnect();
+  }, [active]);
+
+  useEffect(() => () => window.clearTimeout(retryTimerRef.current), []);
+
+  const retry = () => {
+    if (retryAttempt < 2) {
+      window.clearTimeout(retryTimerRef.current);
+      retryTimerRef.current = window.setTimeout(() => setRetryAttempt((value) => value + 1), (retryAttempt + 1) * 350);
+      return;
+    }
+    if (!desktopFallback) setDesktopFallback(true);
+  };
+
+  return <picture ref={pictureRef} className={`responsive-picture ${className}`}>
+    <source media="(max-width: 900px)" srcSet={active && !desktopFallback ? currentMobileSrc : undefined} data-preload-src={mobileSrc} />
+    <img src={active ? currentDesktopSrc : transparentPixel} data-preload-src={src} alt={alt} loading="eager" decoding="async" aria-hidden={ariaHidden || undefined} onError={active ? retry : undefined} />
   </picture>;
 }
 
@@ -537,7 +548,7 @@ export default function Home() {
     const pictureSources = priorityPictures.map((picture) => {
       const source = mobile ? picture.querySelector<HTMLSourceElement>('source[media="(max-width: 900px)"]') : null;
       const image = picture.querySelector<HTMLImageElement>("img");
-      return source?.srcset || image?.src || "";
+      return source?.dataset.preloadSrc || image?.dataset.preloadSrc || "";
     });
     const posterSources = Array.from(document.querySelectorAll<HTMLVideoElement>("video[poster]")).map((video) => video.poster);
     const sources = [...new Set([...pictureSources, ...posterSources].filter(Boolean))];
