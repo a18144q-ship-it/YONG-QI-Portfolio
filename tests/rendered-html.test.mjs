@@ -29,6 +29,8 @@ test("server-renders the complete portfolio case openings", async () => {
   assert.match(html, /TRUCK ROLL BAR/);
   assert.match(html, /\/v2\/crossborder\/truck-roll-bar\/a-plus\.jpg/);
   assert.match(html, /\/v2\/crossborder\/truck-roll-bar\/strategy-hero\.jpg/);
+  assert.match(html, /srcSet="\/mobile\/v2\/crossborder\/truck-roll-bar\/strategy-hero\.webp"/);
+  assert.match(html, /poster="\/portfolio-ufo-cover\.jpg"/);
   assert.match(html, /产品渲染/);
   assert.match(html, /生成图像/);
   assert.match(html, /\/illustrations\/sticker-ssww-bath\.png/);

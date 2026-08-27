@@ -26,6 +26,7 @@ test("exports an upload-ready static portfolio", async () => {
 
   for (const required of [
     "favicon.png",
+    "portfolio-ufo-cover.jpg",
     "portfolio-ufo-cover.mp4",
     "illustrations/sticker-product-knight.png",
     "v2/ssww/07.webp",
@@ -36,6 +37,9 @@ test("exports an upload-ready static portfolio", async () => {
     "v2/crossborder/truck-roll-bar/a-plus.jpg",
     "v2/crossborder/truck-roll-bar/strategy-hero.jpg",
     "v2/crossborder/truck-roll-bar/01.jpg",
+    "mobile/v2/crossborder/truck-roll-bar/strategy-hero.webp",
+    "mobile/v2/aigc-process/set-03/03.webp",
+    "mobile/v2/renders/daily-care/perfume-motion.webp",
   ]) {
     const info = await stat(new URL(required, outputRootUrl));
     assert.ok(info.isFile(), `${required} should exist in the static package`);
@@ -49,4 +53,11 @@ test("exports an upload-ready static portfolio", async () => {
   }
   assert.deepEqual(oversized, []);
   assert.doesNotMatch(files.join("\n"), /green-lounge(?:-original|-silent|-web)?\.mp4/i);
+
+  const mobileFiles = files.filter((file) => file.includes(`${join("static-site", "mobile")}`));
+  assert.ok(mobileFiles.length >= 60, "the static package should include responsive mobile images");
+  for (const file of mobileFiles) {
+    const info = await stat(file);
+    assert.ok(info.size < 2 * 1024 * 1024, `${file} should stay below 2 MB for mobile loading`);
+  }
 });
