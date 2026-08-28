@@ -818,3 +818,23 @@ main .case-section .zoom-image:hover .zoom-image-tilt-frame:before{transform:tra
   .render-mosaic.layout-home>.zoom-image:nth-child(7){order:7}
   .render-mosaic.layout-home>.zoom-image:nth-child(8){order:8}
 }
+
+/* V82 — lightweight WebP previews with explicit loading and full-resolution lightbox states. */
+.responsive-picture{position:relative;isolation:isolate;overflow:hidden;background:rgba(127,127,127,.1)}
+.responsive-picture::before{content:"";position:absolute;z-index:0;inset:0;background:linear-gradient(105deg,transparent 20%,rgba(255,255,255,.34) 42%,transparent 64%);transform:translateX(-115%);animation:preview-shimmer 1.35s ease-in-out infinite;pointer-events:none}
+.responsive-picture>img{position:relative;z-index:1;opacity:0;transition:opacity .28s ease}
+.responsive-picture.is-loaded{background:transparent}
+.responsive-picture.is-loaded::before,.responsive-picture.is-error::before{display:none}
+.responsive-picture.is-loaded>img{opacity:1}
+.responsive-picture.is-error{background:repeating-linear-gradient(135deg,rgba(127,127,127,.08) 0 10px,rgba(127,127,127,.14) 10px 20px)}
+.zoom-image:hover .responsive-picture.is-loaded>img{opacity:.88}
+
+.lightbox .lightbox-status{position:absolute;z-index:2;left:50%;top:50%;transform:translate(-50%,-50%);padding:10px 14px;border:1px solid rgba(255,255,255,.24);border-radius:999px;background:rgba(10,11,13,.72);color:#fff;font-size:10px;letter-spacing:.1em;pointer-events:none}
+.lightbox>img{opacity:0;transition:opacity .28s ease}
+.lightbox.is-loaded>img{opacity:1}
+.lightbox.is-loaded .lightbox-status{display:none}
+.lightbox.is-error .lightbox-status{border-color:rgba(215,200,145,.55);color:#e8dcae}
+.lightbox:not(.is-loaded) .zoom-hint{display:none}
+
+@keyframes preview-shimmer{to{transform:translateX(115%)}}
+@media(prefers-reduced-motion:reduce){.responsive-picture::before{animation:none}}

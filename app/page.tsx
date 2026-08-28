@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
 
 const asset = (folder: string, number: number) => `/v2/${folder}/${String(number).padStart(2, "0")}.webp`;
-const mobileAsset = (src: string) => `/mobile${src.replace(/\.(?:png|jpe?g|webp|gif)$/i, ".webp")}`;
+const previewAsset = (src: string) => `/preview${src.replace(/\.(?:png|jpe?g|webp|gif)$/i, ".webp")}`;
 const retryAsset = (src: string, attempt: number) => `${src}${src.includes("?") ? "&" : "?"}retry=${attempt}`;
 const transparentPixel = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
 
@@ -13,10 +13,11 @@ function ResponsiveImage({ src, alt, loading = "lazy", ariaHidden = false, class
   const retryTimerRef = useRef(0);
   const [active, setActive] = useState(loading === "eager");
   const [retryAttempt, setRetryAttempt] = useState(0);
-  const [desktopFallback, setDesktopFallback] = useState(false);
-  const mobileSrc = mobileAsset(src);
-  const currentDesktopSrc = retryAttempt ? retryAsset(src, retryAttempt) : src;
-  const currentMobileSrc = retryAttempt ? retryAsset(mobileSrc, retryAttempt) : mobileSrc;
+  const [useOriginal, setUseOriginal] = useState(false);
+  const [status, setStatus] = useState<"idle" | "loading" | "loaded" | "error">(loading === "eager" ? "loading" : "idle");
+  const previewSrc = previewAsset(src);
+  const baseSrc = useOriginal ? src : previewSrc;
+  const currentSrc = retryAttempt ? retryAsset(baseSrc, retryAttempt) : baseSrc;
 
   useEffect(() => {
     if (active) return;
@@ -27,9 +28,10 @@ function ResponsiveImage({ src, alt, loading = "lazy", ariaHidden = false, class
     }
     const observer = new IntersectionObserver((entries) => {
       if (!entries.some((entry) => entry.isIntersecting)) return;
+      setStatus("loading");
       setActive(true);
       observer.disconnect();
-    }, { rootMargin: "900px 0px", threshold: 0.01 });
+    }, { rootMargin: "1800px 0px", threshold: 0.01 });
     observer.observe(picture);
     return () => observer.disconnect();
   }, [active]);
@@ -37,17 +39,38 @@ function ResponsiveImage({ src, alt, loading = "lazy", ariaHidden = false, class
   useEffect(() => () => window.clearTimeout(retryTimerRef.current), []);
 
   const retry = () => {
-    if (retryAttempt < 2) {
+    setStatus("loading");
+    if (retryAttempt < 1) {
       window.clearTimeout(retryTimerRef.current);
       retryTimerRef.current = window.setTimeout(() => setRetryAttempt((value) => value + 1), (retryAttempt + 1) * 350);
       return;
     }
-    if (!desktopFallback) setDesktopFallback(true);
+    if (!useOriginal) {
+      setUseOriginal(true);
+      setRetryAttempt(0);
+      return;
+    }
+    if (retryAttempt < 2) {
+      window.clearTimeout(retryTimerRef.current);
+      retryTimerRef.current = window.setTimeout(() => setRetryAttempt((value) => value + 1), 500);
+      return;
+    }
+    setStatus("error");
   };
 
-  return <picture ref={pictureRef} className={`responsive-picture ${className}`}>
-    <source media="(max-width: 900px)" srcSet={active && !desktopFallback ? currentMobileSrc : undefined} data-preload-src={mobileSrc} />
-    <img src={active ? currentDesktopSrc : transparentPixel} data-preload-src={src} alt={alt} loading="eager" decoding="async" aria-hidden={ariaHidden || undefined} onError={active ? retry : undefined} />
+  return <picture ref={pictureRef} className={`responsive-picture is-${status} ${className}`}>
+    <img
+      src={active ? currentSrc : transparentPixel}
+      data-preload-src={previewSrc}
+      data-full-src={src}
+      alt={alt}
+      loading="eager"
+      decoding="async"
+      fetchPriority={loading === "eager" ? "high" : "auto"}
+      aria-hidden={ariaHidden || undefined}
+      onLoad={active ? () => setStatus("loaded") : undefined}
+      onError={active ? retry : undefined}
+    />
   </picture>;
 }
 
@@ -529,9 +552,18 @@ export default function Home() {
   const [modal, setModal] = useState<{ src: string; alt: string } | null>(null);
   const [modalZoom, setModalZoom] = useState(0);
   const [modalTall, setModalTall] = useState(false);
+  const [modalRetry, setModalRetry] = useState(0);
+  const [modalStatus, setModalStatus] = useState<"loading" | "loaded" | "error">("loading");
   const [loadProgress, setLoadProgress] = useState(0);
   const [siteReady, setSiteReady] = useState(false);
-  const open = (src: string, alt: string) => { setModalZoom(0); setModalTall(false); setModal({ src, alt }); };
+  const [loadNotice, setLoadNotice] = useState("正在准备首屏预览");
+  const open = (src: string, alt: string) => {
+    setModalZoom(0);
+    setModalTall(false);
+    setModalRetry(0);
+    setModalStatus("loading");
+    setModal({ src, alt });
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -541,25 +573,24 @@ export default function Home() {
     const previousOverflow = root.style.overflow;
     root.style.overflow = "hidden";
 
-    const mobile = window.matchMedia("(max-width: 900px)").matches;
     const hashTarget = window.location.hash ? document.getElementById(window.location.hash.slice(1)) : null;
     const priorityRoot = hashTarget || document.getElementById("cases");
-    const priorityPictures = Array.from(priorityRoot?.querySelectorAll<HTMLPictureElement>("picture") || []).slice(0, 2);
+    const priorityPictures = Array.from(priorityRoot?.querySelectorAll<HTMLPictureElement>("picture") || []).slice(0, 5);
     const pictureSources = priorityPictures.map((picture) => {
-      const source = mobile ? picture.querySelector<HTMLSourceElement>('source[media="(max-width: 900px)"]') : null;
       const image = picture.querySelector<HTMLImageElement>("img");
-      return source?.dataset.preloadSrc || image?.dataset.preloadSrc || "";
+      return { preview: image?.dataset.preloadSrc || "", fallback: image?.dataset.fullSrc || "" };
     });
-    const posterSources = Array.from(document.querySelectorAll<HTMLVideoElement>("video[poster]")).map((video) => video.poster);
-    const sources = [...new Set([...pictureSources, ...posterSources].filter(Boolean))];
+    const posterSources = Array.from(document.querySelectorAll<HTMLVideoElement>("video[poster]")).map((video) => ({ preview: video.poster, fallback: "" }));
+    const sources = [...new Map([...pictureSources, ...posterSources].filter((item) => item.preview).map((item) => [item.preview, item])).values()];
     let completed = 0;
 
     const advance = () => {
       completed += 1;
       if (!cancelled) setLoadProgress(Math.round((completed / Math.max(1, sources.length)) * 100));
     };
-    const preload = (source: string) => new Promise<void>((resolve) => {
-      let attempt = 0;
+    const preload = ({ preview, fallback }: { preview: string; fallback: string }) => new Promise<boolean>((resolve) => {
+      const candidates = [preview, retryAsset(preview, 1), fallback].filter(Boolean);
+      let candidateIndex = 0;
       const load = () => {
         const image = new Image();
         let settled = false;
@@ -568,25 +599,28 @@ export default function Home() {
           if (settled) return;
           settled = true;
           window.clearTimeout(timeout);
-          if (!loaded && attempt < 1) {
-            attempt += 1;
+          if (!loaded && candidateIndex < candidates.length - 1) {
+            candidateIndex += 1;
             window.setTimeout(load, 350);
             return;
           }
           advance();
-          resolve();
+          resolve(loaded);
         };
-        timeout = window.setTimeout(() => settle(false), 8000);
+        timeout = window.setTimeout(() => settle(false), candidateIndex === candidates.length - 1 ? 9000 : 6500);
         image.onload = () => settle(true);
         image.onerror = () => settle(false);
-        image.src = attempt ? retryAsset(source, attempt) : source;
+        image.decoding = "async";
+        image.src = candidates[candidateIndex];
         if (image.complete && image.naturalWidth > 0) settle(true);
       };
       load();
     });
 
-    Promise.all(sources.map(preload)).then(() => {
+    Promise.all(sources.map(preload)).then((results) => {
       if (cancelled) return;
+      const failed = results.filter((loaded) => !loaded).length;
+      setLoadNotice(failed ? "个别预览将在页面内继续重试" : "首屏预览准备完成");
       setLoadProgress(100);
       const minimumDisplay = Math.max(160, 520 - (Date.now() - startedAt));
       finishTimer = window.setTimeout(() => {
@@ -602,6 +636,49 @@ export default function Home() {
       root.style.overflow = previousOverflow;
     };
   }, []);
+
+  useEffect(() => {
+    if (!siteReady) return;
+    let cancelled = false;
+    let timer = 0;
+    const sources = [...new Set(Array.from(document.querySelectorAll<HTMLElement>("[data-preload-src]"))
+      .map((element) => element.dataset.preloadSrc || "")
+      .filter(Boolean))];
+    let cursor = 0;
+
+    const warm = (source: string) => new Promise<void>((resolve) => {
+      const image = new Image();
+      let settled = false;
+      const finish = () => {
+        if (settled) return;
+        settled = true;
+        window.clearTimeout(timeout);
+        image.onload = null;
+        image.onerror = null;
+        resolve();
+      };
+      const timeout = window.setTimeout(finish, 10000);
+      image.decoding = "async";
+      image.onload = finish;
+      image.onerror = finish;
+      image.src = source;
+      if (image.complete && image.naturalWidth > 0) finish();
+    });
+    const worker = async () => {
+      while (!cancelled && cursor < sources.length) {
+        const source = sources[cursor];
+        cursor += 1;
+        await warm(source);
+      }
+    };
+    timer = window.setTimeout(() => {
+      void Promise.all(Array.from({ length: window.matchMedia("(max-width: 900px)").matches ? 2 : 4 }, worker));
+    }, 180);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
+  }, [siteReady]);
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {
@@ -689,7 +766,7 @@ export default function Home() {
       <div className="site-loader-panel">
         <div className="site-loader-meta"><span>YQ · PORTFOLIO</span><b>{String(loadProgress).padStart(2, "0")}%</b></div>
         <div className="site-loader-track" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={loadProgress}><i style={{ transform: `scaleX(${loadProgress / 100})` }} /></div>
-        <p>LOADING VISUAL ARCHIVE · 正在载入作品</p>
+        <p>LOADING PREVIEWS · {loadNotice}</p>
       </div>
     </div>
   <main className={siteReady ? "site-ready" : "site-preparing"} aria-busy={!siteReady}>
@@ -754,6 +831,6 @@ export default function Home() {
         <div className="about-contact-meta"><span>YONG QI · VISUAL DESIGNER</span><span>© 2026</span></div>
       </div>
     </footer>
-    {modal && <div className={`lightbox ${modalZoom ? `is-zoomed zoom-${modalZoom}` : ""} ${modalTall ? "is-long" : ""}`} role="dialog" aria-modal="true" aria-label={modal.alt} onClick={() => setModal(null)}><button type="button" onClick={() => setModal(null)} aria-label="关闭大图">×</button><img src={modal.src} alt={modal.alt} onLoad={(event) => setModalTall(event.currentTarget.naturalHeight / event.currentTarget.naturalWidth > 2.2)} onClick={(event) => { event.stopPropagation(); setModalZoom((value) => value === 3 ? 0 : value + 1); }} /><span className="zoom-hint">{modalZoom === 0 ? "再次点击图片放大" : modalZoom === 3 ? "再次点击回到适屏" : `再次点击继续放大 · ${modalZoom}/3`}</span></div>}
+    {modal && <div className={`lightbox is-${modalStatus} ${modalZoom ? `is-zoomed zoom-${modalZoom}` : ""} ${modalTall ? "is-long" : ""}`} role="dialog" aria-modal="true" aria-label={modal.alt} onClick={() => setModal(null)}><button type="button" onClick={() => setModal(null)} aria-label="关闭大图">×</button><div className="lightbox-status" role="status">{modalStatus === "error" ? "高清原图加载失败，请重新打开" : "正在加载高清原图…"}</div><img key={`${modal.src}-${modalRetry}`} src={modalRetry ? retryAsset(modal.src, modalRetry) : modal.src} alt={modal.alt} onLoad={(event) => { setModalStatus("loaded"); setModalTall(event.currentTarget.naturalHeight / event.currentTarget.naturalWidth > 2.2); }} onError={() => { if (modalRetry < 2) { setModalRetry((value) => value + 1); setModalStatus("loading"); } else setModalStatus("error"); }} onClick={(event) => { event.stopPropagation(); if (modalStatus === "loaded") setModalZoom((value) => value === 3 ? 0 : value + 1); }} /><span className="zoom-hint">{modalZoom === 0 ? "再次点击图片放大" : modalZoom === 3 ? "再次点击回到适屏" : `再次点击继续放大 · ${modalZoom}/3`}</span></div>}
   </main></>;
 }

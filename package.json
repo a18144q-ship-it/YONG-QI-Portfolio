@@ -9,6 +9,7 @@
     "dev": "set LOCAL_PREVIEW=1&& vinext dev",
     "dev:full": "vinext dev",
     "build": "vinext build",
+    "assets:preview": "node scripts/run-preview-generator.mjs",
     "build:static": "node scripts/build-static.mjs",
     "start": "vinext start",
     "test": "npm run build && node --test tests/rendered-html.test.mjs",

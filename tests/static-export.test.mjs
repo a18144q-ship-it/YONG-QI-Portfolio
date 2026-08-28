@@ -37,9 +37,9 @@ test("exports an upload-ready static portfolio", async () => {
     "v2/crossborder/truck-roll-bar/a-plus.jpg",
     "v2/crossborder/truck-roll-bar/strategy-hero.jpg",
     "v2/crossborder/truck-roll-bar/01.jpg",
-    "mobile/v2/crossborder/truck-roll-bar/strategy-hero.webp",
-    "mobile/v2/aigc-process/set-03/03.webp",
-    "mobile/v2/renders/daily-care/perfume-motion.webp",
+    "preview/v2/crossborder/truck-roll-bar/strategy-hero.webp",
+    "preview/v2/aigc-process/set-03/03.webp",
+    "preview/v2/renders/daily-care/perfume-motion.webp",
   ]) {
     const info = await stat(new URL(required, outputRootUrl));
     assert.ok(info.isFile(), `${required} should exist in the static package`);
@@ -54,13 +54,13 @@ test("exports an upload-ready static portfolio", async () => {
   assert.deepEqual(oversized, []);
   assert.doesNotMatch(files.join("\n"), /green-lounge(?:-original|-silent|-web)?\.mp4/i);
 
-  const mobileFiles = files.filter((file) => file.includes(`${join("static-site", "mobile")}`));
-  assert.ok(mobileFiles.length >= 60, "the static package should include responsive mobile images");
-  let mobileBytes = 0;
-  for (const file of mobileFiles) {
+  const previewFiles = files.filter((file) => file.includes(`${join("static-site", "preview")}`));
+  assert.ok(previewFiles.length >= 60, "the static package should include lightweight WebP previews");
+  let previewBytes = 0;
+  for (const file of previewFiles) {
     const info = await stat(file);
-    mobileBytes += info.size;
-    assert.ok(info.size < 3 * 1024 * 1024, `${file} should stay below 3 MB for mobile loading`);
+    previewBytes += info.size;
+    assert.ok(info.size < 1024 * 1024, `${file} should stay below 1 MB for progressive preview loading`);
   }
-  assert.ok(mobileBytes > 25 * 1024 * 1024 && mobileBytes < 38 * 1024 * 1024, "mobile image quality budget should stay near 30 MB");
+  assert.ok(previewBytes > 4 * 1024 * 1024 && previewBytes < 18 * 1024 * 1024, "preview image budget should stay lightweight while preserving visible quality");
 });
