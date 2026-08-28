@@ -5,7 +5,6 @@ import type { PointerEvent as ReactPointerEvent } from "react";
 
 const asset = (folder: string, number: number) => `/v2/${folder}/${String(number).padStart(2, "0")}.webp`;
 const previewAsset = (src: string) => `/preview${src.replace(/\.(?:png|jpe?g|webp|gif)$/i, ".webp")}`;
-const mobilePreviewAsset = (src: string) => `/preview-mobile${src.replace(/\.(?:png|jpe?g|webp|gif)$/i, ".webp")}`;
 const retryAsset = (src: string, attempt: number) => `${src}${src.includes("?") ? "&" : "?"}retry=${attempt}`;
 const transparentPixel = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
 
@@ -17,11 +16,8 @@ function ResponsiveImage({ src, alt, loading = "lazy", ariaHidden = false, class
   const [useOriginal, setUseOriginal] = useState(false);
   const [status, setStatus] = useState<"idle" | "loading" | "loaded" | "error">(loading === "eager" ? "loading" : "idle");
   const previewSrc = previewAsset(src);
-  const mobilePreviewSrc = mobilePreviewAsset(src);
   const baseSrc = useOriginal ? src : previewSrc;
-  const mobileBaseSrc = useOriginal ? src : mobilePreviewSrc;
   const currentSrc = retryAttempt ? retryAsset(baseSrc, retryAttempt) : baseSrc;
-  const currentMobileSrc = retryAttempt ? retryAsset(mobileBaseSrc, retryAttempt) : mobileBaseSrc;
 
   useEffect(() => {
     if (active) return;
@@ -63,11 +59,9 @@ function ResponsiveImage({ src, alt, loading = "lazy", ariaHidden = false, class
   };
 
   return <picture ref={pictureRef} className={`responsive-picture is-${status} ${className}`}>
-    <source media="(max-width: 900px)" srcSet={active ? currentMobileSrc : transparentPixel} />
     <img
       src={active ? currentSrc : transparentPixel}
       data-preload-src={previewSrc}
-      data-mobile-preload-src={mobilePreviewSrc}
       data-full-src={src}
       alt={alt}
       loading="eager"
@@ -570,6 +564,17 @@ export default function Home() {
     setModalStatus("loading");
     setModal({ src, alt });
   };
+  const moveTitleShine = (event: ReactPointerEvent<SVGSVGElement>) => {
+    const title = event.currentTarget;
+    const bounds = title.getBoundingClientRect();
+    const viewBox = title.viewBox.baseVal;
+    const x = viewBox.x + ((event.clientX - bounds.left) / Math.max(1, bounds.width)) * viewBox.width;
+    const y = viewBox.y + ((event.clientY - bounds.top) / Math.max(1, bounds.height)) * viewBox.height;
+    title.style.setProperty("--title-shine-x", `${x}px`);
+    title.style.setProperty("--title-shine-y", `${y}px`);
+    title.classList.add("is-shining");
+  };
+  const clearTitleShine = (event: ReactPointerEvent<SVGSVGElement>) => event.currentTarget.classList.remove("is-shining");
 
   useEffect(() => {
     let cancelled = false;
@@ -585,10 +590,9 @@ export default function Home() {
     const priorityRoot = hashTarget || document.getElementById("cases");
     const priorityPictures = Array.from(priorityRoot?.querySelectorAll<HTMLPictureElement>("picture") || []).slice(0, 5);
     const allPictures = Array.from(document.querySelectorAll<HTMLPictureElement>("picture"));
-    const useMobilePreviews = window.matchMedia("(max-width: 900px)").matches;
     const readPicture = (picture: HTMLPictureElement) => {
       const image = picture.querySelector<HTMLImageElement>("img");
-      return (useMobilePreviews ? image?.dataset.mobilePreloadSrc : image?.dataset.preloadSrc) || "";
+      return image?.dataset.preloadSrc || "";
     };
     const posterSources = Array.from(document.querySelectorAll<HTMLVideoElement>("video[poster]")).map((video) => video.poster);
     const prioritySources = priorityPictures.map(readPicture).filter(Boolean);
@@ -657,7 +661,7 @@ export default function Home() {
         advance(await preload(source));
       }
     };
-    const workerCount = useMobilePreviews ? 3 : 6;
+    const workerCount = window.matchMedia("(max-width: 900px)").matches ? 3 : 6;
     setLoadNotice(`正在缓存 80% 的页面预览 · 共 ${sources.length} 张`);
     void Promise.all(Array.from({ length: workerCount }, worker));
     safetyTimer = window.setTimeout(() => releaseSite("网络较慢，剩余预览将在页面内继续加载"), 90000);
@@ -766,7 +770,26 @@ export default function Home() {
     <header className="hero hero-editorial" id="top">
       <div className="hero-copy">
         <div className="hero-meta-line"><p className="eyebrow">YONG QI · VISUAL PORTFOLIO</p><span>01 / 2026</span></div>
-        <div className="hero-title-group"><p className="hero-cn-accent">2026作品集</p><h1><span>PORT</span><span>FOLIO</span></h1><p className="hero-edition">Selected Works <em>2026</em></p></div>
+        <div className="hero-title-group">
+          <div className="hero-title-float">
+            <svg className="hero-title-art" viewBox="45 275 1368 510" preserveAspectRatio="xMidYMid meet" role="img" aria-label="作品集 Portfolio" onPointerMove={moveTitleShine} onPointerEnter={moveTitleShine} onPointerLeave={clearTitleShine}>
+              <title>作品集 Portfolio</title>
+              <defs>
+                <mask id="hero-title-alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="1448" height="1086" style={{ maskType: "alpha" }}>
+                  <image href="/portfolio-title.png" x="0" y="0" width="1448" height="1086" />
+                </mask>
+                <radialGradient id="hero-title-highlight" gradientUnits="userSpaceOnUse" r="310">
+                  <stop offset="0" stopColor="#fff" stopOpacity=".94" />
+                  <stop offset=".34" stopColor="#f5ecce" stopOpacity=".48" />
+                  <stop offset="1" stopColor="#fff" stopOpacity="0" />
+                </radialGradient>
+              </defs>
+              <image href="/portfolio-title.png" x="0" y="0" width="1448" height="1086" />
+              <circle className="hero-title-shine" cx="var(--title-shine-x, 730px)" cy="var(--title-shine-y, 530px)" r="310" fill="url(#hero-title-highlight)" mask="url(#hero-title-alpha)" />
+            </svg>
+          </div>
+          <p className="hero-edition">Selected Works <em>2026</em></p>
+        </div>
         <div className="hero-bottom"><p>产品视觉 · 三维渲染 · AI 图像</p><a href="#cases" className="circle-link" aria-label="查看案例"><Arrow /></a></div>
       </div>
       <div className="hero-art reveal">
@@ -777,7 +800,7 @@ export default function Home() {
     </header>
     <Ticker />
 
-    <section className="directory" id="cases"><div className="directory-head reveal"><p className="eyebrow">内容索引 · INDEX</p><h2 className="inside-title">What’s<br /><em>Inside?</em></h2><ResponsiveImage className="directory-absurdity" src="/illustrations/cow-cursor.webp" alt="" ariaHidden /></div><DirectoryCarousel /></section>
+    <section className="directory" id="cases"><div className="directory-head reveal"><p className="eyebrow">内容索引 · INDEX</p><div className="hero-title-float inside-title-float"><svg className="hero-title-art inside-title-art" viewBox="29 282 1203 640" preserveAspectRatio="xMidYMid meet" role="img" aria-label="What's Inside?" onPointerMove={moveTitleShine} onPointerEnter={moveTitleShine} onPointerLeave={clearTitleShine}><title>What's Inside?</title><defs><mask id="inside-title-alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="1254" height="1254" style={{ maskType: "alpha" }}><image href="/inside-title.png" x="0" y="0" width="1254" height="1254" /></mask><radialGradient id="inside-title-highlight" gradientUnits="userSpaceOnUse" r="270"><stop offset="0" stopColor="#fff" stopOpacity=".9" /><stop offset=".34" stopColor="#f5ecce" stopOpacity=".42" /><stop offset="1" stopColor="#fff" stopOpacity="0" /></radialGradient></defs><image href="/inside-title.png" x="0" y="0" width="1254" height="1254" /><circle className="hero-title-shine" cx="var(--title-shine-x, 630px)" cy="var(--title-shine-y, 600px)" r="270" fill="url(#inside-title-highlight)" mask="url(#inside-title-alpha)" /></svg></div><ResponsiveImage className="directory-absurdity" src="/illustrations/cow-cursor.webp" alt="" ariaHidden /></div><DirectoryCarousel /></section>
     <Ticker />
 
     <section className="case-section aure-section" id="aure"><AureCaseIntro /><AureDesignSystem /><div className="detail-grid fade-grid aure-detail"><Grid images={[2, 3, 4]} label="aure" onOpen={open} /></div></section>

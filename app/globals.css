@@ -837,4 +837,15 @@ main .case-section .zoom-image:hover .zoom-image-tilt-frame:before{transform:tra
 .lightbox:not(.is-loaded) .zoom-hint{display:none}
 
 @keyframes preview-shimmer{to{transform:translateX(115%)}}
+
+/* V83 — use the supplied portfolio wordmark as the cover title without distorting its proportions. */
+.hero-title-float{width:min(100%,620px);margin:18px 0 20px;animation:hero-title-float 4.8s ease-in-out infinite;will-change:transform}
+.hero-title-art{display:block;width:100%;height:auto;overflow:visible;filter:drop-shadow(0 6px 7px rgba(22,21,18,.11)) drop-shadow(0 1px 1px rgba(255,255,255,.26));transition:filter .28s ease;cursor:default}
+.hero-title-shine{opacity:0;pointer-events:none;mix-blend-mode:screen;transition:opacity .22s ease;cx:var(--title-shine-x,730px);cy:var(--title-shine-y,530px)}
+.hero-title-art.is-shining{filter:drop-shadow(0 8px 9px rgba(22,21,18,.15)) drop-shadow(0 1px 1px rgba(255,255,255,.34))}.hero-title-art.is-shining .hero-title-shine{opacity:.82}
+.inside-title-float{width:min(100%,760px);margin:0;animation-delay:-1.2s}
+@keyframes hero-title-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@media(max-width:900px){.hero-title-float{width:108%;max-width:none;margin:7px 0 8px;transform:translateX(-2%);animation-name:hero-title-float-mobile}.inside-title-float{width:100%;margin:0;transform:none;animation-name:hero-title-float}.hero-title-art{filter:drop-shadow(0 4px 5px rgba(22,21,18,.1))}.hero-title-shine{display:none}}
+@keyframes hero-title-float-mobile{0%,100%{transform:translate(-2%,0)}50%{transform:translate(-2%,-4px)}}
+@media(prefers-reduced-motion:reduce){.hero-title-float{animation:none}}
 @media(prefers-reduced-motion:reduce){.responsive-picture::before{animation:none}}

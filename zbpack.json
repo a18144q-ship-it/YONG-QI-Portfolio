@@ -1,0 +1,4 @@
+{
+  "build_command": "npm run build:static",
+  "output_dir": "static-site"
+}
