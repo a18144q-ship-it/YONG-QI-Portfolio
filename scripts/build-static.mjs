@@ -35,7 +35,7 @@ try {
 const stylesheet = await readFile(join(projectRoot, "app", "globals.css"), "utf8");
 const assetPaths = new Set(["/favicon.png", "/og.png"]);
 
-for (const match of renderedPage.matchAll(/(?:src|href|poster|srcset|data-preload-src|data-full-src)="(\/[^"]+\.(?:png|jpe?g|webp|gif|mp4))"/gi)) {
+for (const match of renderedPage.matchAll(/(?:src|href|poster|srcset|data-preload-src|data-mobile-preload-src|data-full-src)="(\/[^"]+\.(?:png|jpe?g|webp|gif|mp4))"/gi)) {
   assetPaths.add(match[1]);
 }
 

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { readdir, readFile, stat } from "node:fs/promises";
-import { join } from "node:path";
+import { join, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 
@@ -40,6 +40,9 @@ test("exports an upload-ready static portfolio", async () => {
     "preview/v2/crossborder/truck-roll-bar/strategy-hero.webp",
     "preview/v2/aigc-process/set-03/03.webp",
     "preview/v2/renders/daily-care/perfume-motion.webp",
+    "preview-mobile/v2/crossborder/truck-roll-bar/strategy-hero.webp",
+    "preview-mobile/v2/aigc-process/set-03/03.webp",
+    "preview-mobile/v2/renders/daily-care/perfume-motion.webp",
   ]) {
     const info = await stat(new URL(required, outputRootUrl));
     assert.ok(info.isFile(), `${required} should exist in the static package`);
@@ -54,7 +57,7 @@ test("exports an upload-ready static portfolio", async () => {
   assert.deepEqual(oversized, []);
   assert.doesNotMatch(files.join("\n"), /green-lounge(?:-original|-silent|-web)?\.mp4/i);
 
-  const previewFiles = files.filter((file) => file.includes(`${join("static-site", "preview")}`));
+  const previewFiles = files.filter((file) => file.startsWith(`${join(outputRoot, "preview")}${sep}`));
   assert.ok(previewFiles.length >= 60, "the static package should include lightweight WebP previews");
   let previewBytes = 0;
   for (const file of previewFiles) {
@@ -63,4 +66,14 @@ test("exports an upload-ready static portfolio", async () => {
     assert.ok(info.size < 1024 * 1024, `${file} should stay below 1 MB for progressive preview loading`);
   }
   assert.ok(previewBytes > 4 * 1024 * 1024 && previewBytes < 18 * 1024 * 1024, "preview image budget should stay lightweight while preserving visible quality");
+
+  const mobilePreviewFiles = files.filter((file) => file.startsWith(`${join(outputRoot, "preview-mobile")}${sep}`));
+  assert.ok(mobilePreviewFiles.length >= 60, "the static package should include mobile-specific WebP previews");
+  let mobilePreviewBytes = 0;
+  for (const file of mobilePreviewFiles) {
+    const info = await stat(file);
+    mobilePreviewBytes += info.size;
+    assert.ok(info.size < 600 * 1024, `${file} should stay below 600 KB for mobile preview loading`);
+  }
+  assert.ok(mobilePreviewBytes > 2 * 1024 * 1024 && mobilePreviewBytes < previewBytes, "mobile previews should be lighter than desktop previews");
 });

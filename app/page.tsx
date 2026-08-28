@@ -5,6 +5,7 @@ import type { PointerEvent as ReactPointerEvent } from "react";
 
 const asset = (folder: string, number: number) => `/v2/${folder}/${String(number).padStart(2, "0")}.webp`;
 const previewAsset = (src: string) => `/preview${src.replace(/\.(?:png|jpe?g|webp|gif)$/i, ".webp")}`;
+const mobilePreviewAsset = (src: string) => `/preview-mobile${src.replace(/\.(?:png|jpe?g|webp|gif)$/i, ".webp")}`;
 const retryAsset = (src: string, attempt: number) => `${src}${src.includes("?") ? "&" : "?"}retry=${attempt}`;
 const transparentPixel = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
 
@@ -16,8 +17,11 @@ function ResponsiveImage({ src, alt, loading = "lazy", ariaHidden = false, class
   const [useOriginal, setUseOriginal] = useState(false);
   const [status, setStatus] = useState<"idle" | "loading" | "loaded" | "error">(loading === "eager" ? "loading" : "idle");
   const previewSrc = previewAsset(src);
+  const mobilePreviewSrc = mobilePreviewAsset(src);
   const baseSrc = useOriginal ? src : previewSrc;
+  const mobileBaseSrc = useOriginal ? src : mobilePreviewSrc;
   const currentSrc = retryAttempt ? retryAsset(baseSrc, retryAttempt) : baseSrc;
+  const currentMobileSrc = retryAttempt ? retryAsset(mobileBaseSrc, retryAttempt) : mobileBaseSrc;
 
   useEffect(() => {
     if (active) return;
@@ -59,9 +63,11 @@ function ResponsiveImage({ src, alt, loading = "lazy", ariaHidden = false, class
   };
 
   return <picture ref={pictureRef} className={`responsive-picture is-${status} ${className}`}>
+    <source media="(max-width: 900px)" srcSet={active ? currentMobileSrc : transparentPixel} />
     <img
       src={active ? currentSrc : transparentPixel}
       data-preload-src={previewSrc}
+      data-mobile-preload-src={mobilePreviewSrc}
       data-full-src={src}
       alt={alt}
       loading="eager"
@@ -568,6 +574,8 @@ export default function Home() {
   useEffect(() => {
     let cancelled = false;
     let finishTimer = 0;
+    let safetyTimer = 0;
+    let gateOpened = false;
     const startedAt = Date.now();
     const root = document.documentElement;
     const previousOverflow = root.style.overflow;
@@ -576,20 +584,46 @@ export default function Home() {
     const hashTarget = window.location.hash ? document.getElementById(window.location.hash.slice(1)) : null;
     const priorityRoot = hashTarget || document.getElementById("cases");
     const priorityPictures = Array.from(priorityRoot?.querySelectorAll<HTMLPictureElement>("picture") || []).slice(0, 5);
-    const pictureSources = priorityPictures.map((picture) => {
+    const allPictures = Array.from(document.querySelectorAll<HTMLPictureElement>("picture"));
+    const useMobilePreviews = window.matchMedia("(max-width: 900px)").matches;
+    const readPicture = (picture: HTMLPictureElement) => {
       const image = picture.querySelector<HTMLImageElement>("img");
-      return { preview: image?.dataset.preloadSrc || "", fallback: image?.dataset.fullSrc || "" };
-    });
-    const posterSources = Array.from(document.querySelectorAll<HTMLVideoElement>("video[poster]")).map((video) => ({ preview: video.poster, fallback: "" }));
-    const sources = [...new Map([...pictureSources, ...posterSources].filter((item) => item.preview).map((item) => [item.preview, item])).values()];
-    let completed = 0;
-
-    const advance = () => {
-      completed += 1;
-      if (!cancelled) setLoadProgress(Math.round((completed / Math.max(1, sources.length)) * 100));
+      return (useMobilePreviews ? image?.dataset.mobilePreloadSrc : image?.dataset.preloadSrc) || "";
     };
-    const preload = ({ preview, fallback }: { preview: string; fallback: string }) => new Promise<boolean>((resolve) => {
-      const candidates = [preview, retryAsset(preview, 1), fallback].filter(Boolean);
+    const posterSources = Array.from(document.querySelectorAll<HTMLVideoElement>("video[poster]")).map((video) => video.poster);
+    const prioritySources = priorityPictures.map(readPicture).filter(Boolean);
+    const allSources = [...allPictures.map(readPicture), ...posterSources].filter(Boolean);
+    const uniqueSources = [...new Set(allSources)];
+    const prioritySet = new Set(prioritySources);
+    const sources = [...prioritySources, ...uniqueSources.filter((source) => !prioritySet.has(source))];
+    const requiredLoaded = Math.max(1, Math.ceil(sources.length * 0.8));
+    let completed = 0;
+    let loaded = 0;
+    let cursor = 0;
+
+    const releaseSite = (notice: string) => {
+      if (cancelled || gateOpened) return;
+      gateOpened = true;
+      setLoadNotice(notice);
+      const minimumDisplay = Math.max(160, 520 - (Date.now() - startedAt));
+      finishTimer = window.setTimeout(() => {
+        if (cancelled) return;
+        setSiteReady(true);
+        root.style.overflow = previousOverflow;
+      }, minimumDisplay);
+    };
+
+    const advance = (didLoad: boolean) => {
+      completed += 1;
+      if (didLoad) loaded += 1;
+      if (cancelled) return;
+      setLoadProgress(Math.round((loaded / Math.max(1, sources.length)) * 100));
+      setLoadNotice(`已缓存 ${loaded} / ${sources.length} 张预览`);
+      if (loaded >= requiredLoaded) releaseSite("80% 页面预览已缓存，正在进入");
+      else if (completed >= sources.length) releaseSite("可用预览已完成缓存，未完成图片将在页面内重试");
+    };
+    const preload = (preview: string) => new Promise<boolean>((resolve) => {
+      const candidates = [preview, retryAsset(preview, 1)];
       let candidateIndex = 0;
       const load = () => {
         const image = new Image();
@@ -604,10 +638,9 @@ export default function Home() {
             window.setTimeout(load, 350);
             return;
           }
-          advance();
           resolve(loaded);
         };
-        timeout = window.setTimeout(() => settle(false), candidateIndex === candidates.length - 1 ? 9000 : 6500);
+        timeout = window.setTimeout(() => settle(false), 7000);
         image.onload = () => settle(true);
         image.onerror = () => settle(false);
         image.decoding = "async";
@@ -617,68 +650,25 @@ export default function Home() {
       load();
     });
 
-    Promise.all(sources.map(preload)).then((results) => {
-      if (cancelled) return;
-      const failed = results.filter((loaded) => !loaded).length;
-      setLoadNotice(failed ? "个别预览将在页面内继续重试" : "首屏预览准备完成");
-      setLoadProgress(100);
-      const minimumDisplay = Math.max(160, 520 - (Date.now() - startedAt));
-      finishTimer = window.setTimeout(() => {
-        if (cancelled) return;
-        setSiteReady(true);
-        root.style.overflow = previousOverflow;
-      }, minimumDisplay);
-    });
-
-    return () => {
-      cancelled = true;
-      window.clearTimeout(finishTimer);
-      root.style.overflow = previousOverflow;
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!siteReady) return;
-    let cancelled = false;
-    let timer = 0;
-    const sources = [...new Set(Array.from(document.querySelectorAll<HTMLElement>("[data-preload-src]"))
-      .map((element) => element.dataset.preloadSrc || "")
-      .filter(Boolean))];
-    let cursor = 0;
-
-    const warm = (source: string) => new Promise<void>((resolve) => {
-      const image = new Image();
-      let settled = false;
-      const finish = () => {
-        if (settled) return;
-        settled = true;
-        window.clearTimeout(timeout);
-        image.onload = null;
-        image.onerror = null;
-        resolve();
-      };
-      const timeout = window.setTimeout(finish, 10000);
-      image.decoding = "async";
-      image.onload = finish;
-      image.onerror = finish;
-      image.src = source;
-      if (image.complete && image.naturalWidth > 0) finish();
-    });
     const worker = async () => {
       while (!cancelled && cursor < sources.length) {
         const source = sources[cursor];
         cursor += 1;
-        await warm(source);
+        advance(await preload(source));
       }
     };
-    timer = window.setTimeout(() => {
-      void Promise.all(Array.from({ length: window.matchMedia("(max-width: 900px)").matches ? 2 : 4 }, worker));
-    }, 180);
+    const workerCount = useMobilePreviews ? 3 : 6;
+    setLoadNotice(`正在缓存 80% 的页面预览 · 共 ${sources.length} 张`);
+    void Promise.all(Array.from({ length: workerCount }, worker));
+    safetyTimer = window.setTimeout(() => releaseSite("网络较慢，剩余预览将在页面内继续加载"), 90000);
+
     return () => {
       cancelled = true;
-      window.clearTimeout(timer);
+      window.clearTimeout(finishTimer);
+      window.clearTimeout(safetyTimer);
+      root.style.overflow = previousOverflow;
     };
-  }, [siteReady]);
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {
