@@ -117,6 +117,11 @@ const aiImageProcessGroups = [
     { number: "02", file: "02.webp", title: "场景合成", note: "SCENE COMPOSITING" },
     { number: "03", file: "03.webp", title: "最终成片", note: "FINAL IMAGE" },
   ] },
+  { id: "04", folder: "set-04", orientation: "portrait", kind: "product", product: "沙发场景", steps: [
+    { number: "01", file: "02.jpg", title: "人物基底", note: "MODEL BASE" },
+    { number: "02", file: "03.jpg", title: "场景生成", note: "SCENE GENERATION" },
+    { number: "03", file: "01.jpg", title: "最终成片", note: "FINAL IMAGE" },
+  ] },
 ];
 
 const aurePalette = [
@@ -134,6 +139,15 @@ const sswwPalette = [
 ];
 
 function Arrow() { return <span className="arrow" aria-hidden="true">↗</span>; }
+function StickerArrowIcon({ direction, className = "" }: { direction: "down" | "left" | "right" | "up-right"; className?: string }) {
+  const arrowPath = "M26 9C23.2 9 21 11.2 21 14V31H13C8.2 31 5.8 36.8 9.3 40L27.9 57.2C30.2 59.3 33.8 59.3 36.1 57.2L54.7 40C58.2 36.8 55.8 31 51 31H43V14C43 11.2 40.8 9 38 9H26Z";
+  return <svg className={`sticker-arrow-icon is-${direction} ${className}`} viewBox="0 0 64 68" aria-hidden="true">
+    <path className="sticker-arrow-outline" d={arrowPath} />
+    <path className="sticker-arrow-face" d={arrowPath} />
+    <path className="sticker-arrow-spark" d="M32 15.5L33.5 19L37 20.5L33.5 22L32 25.5L30.5 22L27 20.5L30.5 19L32 15.5Z" />
+  </svg>;
+}
+function DownArrow() { return <StickerArrowIcon direction="down" className="hero-scroll-icon" />; }
 
 type ImageTiltSession = {
   element: HTMLElement;
@@ -310,9 +324,9 @@ function DirectoryCarousel() {
       })}
     </div>
     <div className="case-carousel-controls">
-      <button type="button" onClick={() => move(-1)} aria-label="上一个案例">←</button>
+      <button type="button" onClick={() => move(-1)} aria-label="上一个案例"><StickerArrowIcon direction="left" className="carousel-sticker-arrow" /></button>
       <div className="case-carousel-status" aria-live="polite"><span>{String(activeIndex + 1).padStart(2, "0")}</span><i /><b>{String(total).padStart(2, "0")}</b><em>点击跳转</em></div>
-      <button type="button" onClick={() => move(1)} aria-label="下一个案例">→</button>
+      <button type="button" onClick={() => move(1)} aria-label="下一个案例"><StickerArrowIcon direction="right" className="carousel-sticker-arrow" /></button>
     </div>
   </div>;
 }
@@ -366,7 +380,7 @@ function AiImageProcess({ onOpen }: { onOpen: (src: string, alt: string) => void
 
   return <section className="ai-process-board" aria-labelledby="ai-process-title">
     <div className="ai-process-head reveal">
-      <div><span>AI IMAGE WORKFLOW · 09 STEPS</span><h4 id="ai-process-title">产品场景生成流程</h4></div>
+      <div><span>AI IMAGE WORKFLOW · 12 STEPS</span><h4 id="ai-process-title">产品场景生成流程</h4></div>
       <p>从产品基底、场景构建到最终精修，以连续图像展示生成过程中的构图、融合与光影控制。</p>
     </div>
     <div className="ai-process-vehicle-row" aria-label="汽车场景生成流程">
@@ -375,15 +389,17 @@ function AiImageProcess({ onOpen }: { onOpen: (src: string, alt: string) => void
         <div className="ai-process-feature-grid">{group.steps.map((step) => processItem(group, step, true))}</div>
       </section>)}
     </div>
-    {productGroups.map((group) => <div className="ai-process-product ai-process-secondary-product" key={group.id}>
-      <h5 className="ai-process-product-title"><span>{group.id}</span>{group.product}</h5>
-      <div className="ai-process-grid">{group.steps.map((step) => processItem(group, step))}</div>
-    </div>)}
+    <div className="ai-process-secondary-row" aria-label="产品场景生成流程">
+      {productGroups.map((group) => <section className="ai-process-product ai-process-secondary-product" key={group.id}>
+        <h5 className="ai-process-product-title"><span>{group.id}</span>{group.product}</h5>
+        <div className="ai-process-feature-grid ai-process-secondary-feature-grid">{group.steps.map((step) => processItem(group, step, true))}</div>
+      </section>)}
+    </div>
   </section>;
 }
 
 function AureCaseIntro() {
-  return <><ProjectOpening index="01" category="E-COMMERCE VISUAL SYSTEM" title="耳机详情视觉" subtitle="AURE Buds Pro" summary="为 TWS 耳机建立从产品功能到情绪场景的电商视觉系统，以沉浸降噪为叙事核心，统一主视觉、卖点图与产品精修。" image="/illustrations/sticker-aigc-office.png" variant="aure" artworkClass="is-sticker-artwork is-office-sticker" mirror={false} facts={[
+  return <><ProjectOpening index="01" category="E-COMMERCE VISUAL SYSTEM" title="耳机详情视觉" subtitle="AURE Buds Pro" summary="为 AURE 耳机建立从产品功能到情绪场景的电商视觉系统，以沉浸降噪为叙事核心，统一主视觉、卖点图与产品精修。" image="/illustrations/sticker-aigc-office.png" variant="aure" artworkClass="is-sticker-artwork is-office-sticker" mirror={false} facts={[
     { label: "PROJECT / 项目类型", value: "耳机电商详情视觉" },
     { label: "ROLE / 个人职责", value: "视觉方向 · 3D 场景 · 后期精修" },
     { label: "OUTPUT / 交付内容", value: "主视觉 · 卖点图 · 详情页" },
@@ -433,7 +449,7 @@ function AureDesignSystem() {
   return <section className="aure-brand-strip reveal" aria-label="AURE 色彩与产品设计系统">
     <div className="aure-palette-copy">
       <header><p>04 / COLOR SYSTEM</p><span>VISUAL LANGUAGE · AURE</span></header>
-      <h3>沉静作为底色，<em>琥珀定义焦点。</em></h3>
+      <h3><span>整体配色</span><small>沉静作为底色，<em>琥珀定义焦点。</em></small></h3>
       <div className="aure-swatches" aria-label="AURE 品牌色板">
         {aurePalette.map((color) => <div className="aure-swatch" key={color.hex}><i style={{ background: color.hex }} /><span>{color.name}</span><b>{color.hex}</b></div>)}
       </div>
@@ -497,7 +513,7 @@ function SswwDesignSystem() {
   return <section className="aure-brand-strip ssww-brand-strip reveal" aria-label="SSWW 色彩与产品设计系统">
     <div className="aure-palette-copy">
       <header><p>04 / COLOR SYSTEM</p><span>VISUAL LANGUAGE · SSWW</span></header>
-      <h3>温润材质承载舒适，<em>品牌蓝锁定功能焦点。</em></h3>
+      <h3><span>整体配色</span><small>温润材质承载舒适，<em>品牌蓝锁定功能焦点。</em></small></h3>
       <div className="aure-swatches" aria-label="SSWW 品牌色板">
         {sswwPalette.map((color) => <div className="aure-swatch" key={color.hex}><i style={{ background: color.hex }} /><span>{color.name}</span><b>{color.hex}</b></div>)}
       </div>
@@ -790,7 +806,7 @@ export default function Home() {
           </div>
           <p className="hero-edition">Selected Works <em>2026</em></p>
         </div>
-        <div className="hero-bottom"><p>产品视觉 · 三维渲染 · AI 图像</p><a href="#cases" className="circle-link" aria-label="查看案例"><Arrow /></a></div>
+        <div className="hero-bottom"><p>产品视觉 · 三维渲染 · AI 图像</p><a href="#cases" className="circle-link hero-scroll-link" aria-label="向下滚动查看案例"><DownArrow /></a></div>
       </div>
       <div className="hero-art reveal">
         <video ref={heroVideoRef} autoPlay loop muted playsInline preload="metadata" poster="/portfolio-ufo-cover.jpg" aria-label="UFO 光束吸起奶牛与斑马的动态封面">
@@ -809,7 +825,7 @@ export default function Home() {
     <section className="case-section ssww-section" id="ssww"><SswwCaseIntro /><SswwDesignSystem /><div className="bath-series"><div className="group-label reveal"><span>01</span><div><h3>按摩浴缸</h3><p>Massage Bath</p></div></div><div className="detail-grid fade-grid bath-grid massage-detail"><Grid images={[2, 3, 4, 5]} label="ssww" onOpen={open} /></div></div><div className="bath-series"><div className="group-label reveal"><span>02</span><div><h3>独立浴缸</h3><p>Freestanding Bath</p></div></div><div className="detail-grid fade-grid bath-grid freestanding-detail"><Grid images={[7, 8, 9, 10]} label="ssww" onOpen={open} /></div></div></section>
     <Ticker />
 
-    <section className="case-section crossborder-section" id="crossborder"><ProjectOpening index="03" category="TRUCK ROLL BAR VISUAL SYSTEM" title="皮卡防滚架视觉" subtitle="Truck Roll Bar" summary="围绕皮卡防滚架建立从主图、卖点图到 Amazon A+ 的完整跨境电商视觉，以 350 LBS 承重、防锈耐候、车型适配与载物拓展为核心，强化产品的硬朗性能与户外使用价值。" image="/illustrations/sticker-ssww-bath.png" variant="crossborder" artworkClass="is-sticker-artwork is-ssww-sticker" mirror={false} facts={[
+    <section className="case-section crossborder-section" id="crossborder"><ProjectOpening index="03" category="TRUCK ROLL BAR VISUAL SYSTEM" title="皮卡防滚架视觉" subtitle="Truck Roll Bar" summary="围绕皮卡防滚架建立从主图、卖点图到 Amazon A+ 的完整跨境电商视觉，以 350 LBS 承重、防锈耐候、车型适配与载物拓展为核心，强化产品的硬朗性能与户外使用价值。" image="/illustrations/sticker-crossborder.png" variant="crossborder" artworkClass="is-sticker-artwork is-crossborder-sticker" mirror={false} facts={[
       { label: "PROJECT / 项目类型", value: "皮卡防滚架跨境电商视觉" },
       { label: "ROLE / 个人职责", value: "视觉方向 · 卖点策划 · 场景合成" },
       { label: "OUTPUT / 交付内容", value: "主图 · 卖点图 · Amazon A+" },
@@ -840,7 +856,7 @@ export default function Home() {
         <div className="about-contact-copy reveal"><p>专注产品视觉、电商详情与三维渲染，以完整图像叙事帮助产品建立更清晰的商业感知。</p><p>独立完成产品建模、渲染、后期精修与 AI 辅助图像创作。</p></div>
       </div>
       <div className="about-contact-bottom">
-        <div><span>LET’S WORK TOGETHER</span><a className="about-contact-mail" href="mailto:894068734@qq.com">894068734@qq.com <Arrow /></a></div>
+        <div><span>LET’S WORK TOGETHER</span><a className="about-contact-mail" href="mailto:894068734@qq.com">894068734@qq.com <StickerArrowIcon direction="up-right" className="footer-sticker-arrow" /></a></div>
         <div className="about-contact-meta"><span>YONG QI · VISUAL DESIGNER</span><span>© 2026</span></div>
       </div>
     </footer>

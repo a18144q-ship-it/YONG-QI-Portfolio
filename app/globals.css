@@ -250,9 +250,9 @@
 .hero-editorial .hero-art video{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;object-position:50% 50%;background:var(--paper)}
 
 /* V50 — restrained absurd illustration accents */
-.directory-head{grid-template-columns:2fr minmax(0,7fr) minmax(180px,3fr)}.directory-absurdity{display:block;width:min(20vw,300px);height:auto;justify-self:end;align-self:center;transform:rotate(-4deg);filter:drop-shadow(0 10px 15px rgba(25,25,22,.08));animation:absurd-bob 5.5s ease-in-out infinite}
+.directory-head{grid-template-columns:minmax(110px,.9fr) minmax(0,4.8fr) minmax(230px,2.15fr);gap:clamp(24px,3vw,54px);align-items:center}.directory-absurdity{display:block;width:min(21vw,290px);height:auto;aspect-ratio:1000/675;justify-self:end;align-self:center;transform:rotate(-4deg);filter:drop-shadow(0 8px 12px rgba(25,25,22,.07));animation:absurd-bob 5.5s ease-in-out infinite}.responsive-picture.directory-absurdity>img{width:100%;height:auto;aspect-ratio:1000/675;object-fit:contain}
 @keyframes absurd-bob{0%,100%{translate:0 0}50%{translate:0 -7px}}
-@media(max-width:900px){.directory-head{grid-template-columns:1fr}.directory-absurdity{width:min(58vw,230px);margin-top:-34px;justify-self:end}}
+@media(max-width:900px){.directory-head{grid-template-columns:1fr;gap:16px}.directory-absurdity{width:min(50vw,210px);margin-top:-8px;justify-self:end}}
 @media(prefers-reduced-motion:reduce){.directory-absurdity{animation:none}}
 
 /* V51 — natural case height */
@@ -373,11 +373,13 @@
 .project-opening-artwork.is-crossborder-artwork{height:clamp(165px,16vw,245px);border:1px solid rgba(23,27,28,.17);border-radius:clamp(10px,1vw,16px);background:#d8ddd7;box-shadow:0 18px 42px rgba(23,27,28,.14)}
 .project-opening-artwork.is-crossborder-artwork img{object-fit:cover;object-position:center 73%}
 .project-opening-artwork.is-sticker-artwork{--sticker-image:none;--sticker-rest-rotation:0deg;--sticker-scale:1;--sticker-tilt-x:0deg;--sticker-tilt-y:0deg;--sticker-move-x:0px;--sticker-move-y:0px;--sticker-shadow-x:0px;--sticker-shadow-y:12px;--sticker-glint-x:50%;--sticker-glint-y:42%;overflow:visible;perspective:850px;pointer-events:none}
+.project-opening-artwork.is-sticker-artwork .responsive-picture{overflow:visible;background:transparent}
 .project-opening-artwork.is-sticker-artwork img,.project-opening-artwork.is-sticker-artwork::after{transform:translate3d(var(--sticker-move-x),var(--sticker-move-y),0) rotateX(var(--sticker-tilt-x)) rotateY(var(--sticker-tilt-y)) rotateZ(var(--sticker-rest-rotation)) scale(var(--sticker-scale));transform-origin:center;transition:transform .18s cubic-bezier(.22,1,.36,1)}
 .project-opening-artwork.is-sticker-artwork img{filter:drop-shadow(var(--sticker-shadow-x) var(--sticker-shadow-y) 14px rgba(25,25,22,.26)) saturate(1.06) contrast(1.035);transition:transform .18s cubic-bezier(.22,1,.36,1),filter .18s ease;will-change:transform,filter}
 .project-opening-artwork.is-sticker-artwork::after{content:"";position:absolute;z-index:3;inset:0;background:radial-gradient(circle at var(--sticker-glint-x) var(--sticker-glint-y),rgba(255,255,255,.84) 0,rgba(224,238,255,.42) 9%,rgba(255,255,255,.12) 18%,transparent 30%);-webkit-mask-image:var(--sticker-image);mask-image:var(--sticker-image);-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center;-webkit-mask-size:contain;mask-size:contain;mix-blend-mode:screen;opacity:.32;pointer-events:none;transition:transform .18s cubic-bezier(.22,1,.36,1),opacity .2s ease;will-change:transform,opacity}
 .project-opening-artwork.is-sticker-artwork.is-sticker-tilting::after{opacity:.5}
 .project-opening-artwork.is-ssww-sticker{--sticker-image:url("/illustrations/sticker-ssww-bath.png");--sticker-rest-rotation:-2deg;--sticker-scale:1.03}
+.project-opening-artwork.is-crossborder-sticker{--sticker-image:url("/illustrations/sticker-crossborder.png");--sticker-rest-rotation:-1deg;--sticker-scale:1.3}
 .project-opening-artwork.is-product-sticker{--sticker-image:url("/illustrations/sticker-product-knight.png");--sticker-rest-rotation:2deg;--sticker-scale:1.04}
 .project-opening-artwork.is-office-sticker{--sticker-image:url("/illustrations/sticker-aigc-office.png");--sticker-rest-rotation:-1.5deg;--sticker-scale:1.02}
 .project-opening-facts{position:relative;z-index:2;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin:0;padding:0;border-top:1px solid var(--opening-line);border-bottom:1px solid var(--opening-line)}
@@ -573,7 +575,11 @@ main .case-section .zoom-image:hover .zoom-image-tilt-frame:before{transform:tra
 .ai-process-feature-item .ai-process-image img{width:100%;height:100%;padding:0;object-fit:cover;object-position:center 58%}
 .ai-process-feature-item .ai-process-meta{position:absolute;z-index:3;left:8px;right:8px;bottom:8px;display:grid;grid-template-columns:auto 1fr;gap:7px;align-items:center;width:max-content;max-width:calc(100% - 16px);padding:6px 8px;border-radius:7px;background:rgba(15,18,20,.72);color:#fff;backdrop-filter:blur(8px);pointer-events:none}
 .ai-process-feature-item .ai-process-meta>span{color:#d7c891;font-size:14px}.ai-process-feature-item .ai-process-meta h5{margin:0;color:#fff;font-size:9px;letter-spacing:.04em}.ai-process-feature-item .ai-process-meta p{display:none}
-.ai-process-secondary-product{margin-top:clamp(38px,4vw,56px);padding-top:18px;border-top:1px solid var(--process-line)}
+.ai-process-secondary-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(18px,1.8vw,28px);align-items:stretch;margin-top:clamp(38px,4vw,56px);padding-top:18px;border-top:1px solid var(--process-line)}
+.ai-process-secondary-row>.ai-process-secondary-product{display:grid;grid-template-rows:auto minmax(0,1fr);min-width:0;margin:0;padding:0;border:0}
+.ai-process-secondary-row>.ai-process-secondary-product+.ai-process-secondary-product{margin-top:0;padding-top:0;border-top:0}
+.ai-process-secondary-product .ai-process-product-title{margin-bottom:12px}.ai-process-secondary-feature-grid{align-self:start;width:100%;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);aspect-ratio:1.45/1}
+.ai-process-secondary-feature-grid .ai-process-feature-item:nth-child(-n+2) img{object-position:center}.ai-process-secondary-feature-grid .ai-process-feature-item:nth-child(3) img{object-position:center 52%}
 @media(max-width:900px){.ai-process-vehicle-row{grid-template-columns:repeat(2,minmax(520px,82vw));overflow-x:auto;overscroll-behavior-inline:contain;padding-bottom:12px;scroll-snap-type:x proximity}.ai-process-vehicle-group{scroll-snap-align:start}.ai-process-feature-grid{aspect-ratio:2.25/1}}
 
 /* The roll-bar feature is presented as two independent cards rather than one joined panel. */
@@ -732,6 +738,15 @@ main .case-section .zoom-image:hover .zoom-image-tilt-frame:before{transform:tra
     grid-template-columns:1fr;
     gap:16px;
   }
+  .ai-process-secondary-row{
+    grid-template-columns:1fr;
+    gap:16px;
+  }
+  .ai-process-secondary-row>.ai-process-secondary-product+.ai-process-secondary-product{
+    margin-top:2px;
+    padding-top:16px;
+    border-top:1px solid var(--process-line);
+  }
   .ai-process-vehicle-group+.ai-process-vehicle-group{
     margin-top:2px;
     padding-top:16px;
@@ -791,21 +806,7 @@ main .case-section .zoom-image:hover .zoom-image-tilt-frame:before{transform:tra
   }
   .crossborder-square-grid{gap:5px}
 
-  .ai-process-secondary-product .ai-process-grid{
-    height:clamp(270px,84vw,340px);
-    grid-template-columns:minmax(0,.72fr) minmax(0,1.28fr);
-    grid-template-rows:repeat(2,minmax(0,1fr));
-    gap:6px;
-    align-items:stretch;
-  }
-  .ai-process-secondary-product .ai-process-item{display:grid;min-height:0;grid-template-rows:minmax(0,1fr) auto}
-  .ai-process-secondary-product .ai-process-item:nth-child(1){grid-column:1;grid-row:1}
-  .ai-process-secondary-product .ai-process-item:nth-child(2){grid-column:1;grid-row:2}
-  .ai-process-secondary-product .ai-process-item:nth-child(3){grid-column:2;grid-row:1/span 2}
-  .ai-process-secondary-product .ai-process-image,
-  .ai-process-secondary-product .ai-process-item.is-portrait .ai-process-image{width:100%;height:100%;aspect-ratio:auto}
-  .ai-process-secondary-product .ai-process-image img{width:100%;height:100%;object-fit:cover;object-position:center}
-  .ai-process-secondary-product .ai-process-meta{padding-top:3px}
+  .ai-process-secondary-feature-grid{aspect-ratio:1.45/1}
 }
 
 @media(max-width:560px){
@@ -843,9 +844,73 @@ main .case-section .zoom-image:hover .zoom-image-tilt-frame:before{transform:tra
 .hero-title-art{display:block;width:100%;height:auto;overflow:visible;filter:drop-shadow(0 6px 7px rgba(22,21,18,.11)) drop-shadow(0 1px 1px rgba(255,255,255,.26));transition:filter .28s ease;cursor:default}
 .hero-title-shine{opacity:0;pointer-events:none;mix-blend-mode:screen;transition:opacity .22s ease;cx:var(--title-shine-x,730px);cy:var(--title-shine-y,530px)}
 .hero-title-art.is-shining{filter:drop-shadow(0 8px 9px rgba(22,21,18,.15)) drop-shadow(0 1px 1px rgba(255,255,255,.34))}.hero-title-art.is-shining .hero-title-shine{opacity:.82}
-.inside-title-float{width:min(100%,760px);margin:0;animation-delay:-1.2s}
+.inside-title-float{width:min(100%,329px);margin:0;animation-delay:-1.2s}
 @keyframes hero-title-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
-@media(max-width:900px){.hero-title-float{width:108%;max-width:none;margin:7px 0 8px;transform:translateX(-2%);animation-name:hero-title-float-mobile}.inside-title-float{width:100%;margin:0;transform:none;animation-name:hero-title-float}.hero-title-art{filter:drop-shadow(0 4px 5px rgba(22,21,18,.1))}.hero-title-shine{display:none}}
+@media(max-width:900px){.hero-title-float{width:108%;max-width:none;margin:7px 0 8px;transform:translateX(-2%);animation-name:hero-title-float-mobile}.inside-title-float{width:82%;margin:0 auto;transform:none;animation-name:hero-title-float}.hero-title-art{filter:drop-shadow(0 4px 5px rgba(22,21,18,.1))}.hero-title-shine{display:none}}
 @keyframes hero-title-float-mobile{0%,100%{transform:translate(-2%,0)}50%{transform:translate(-2%,-4px)}}
 @media(prefers-reduced-motion:reduce){.hero-title-float{animation:none}}
 @media(prefers-reduced-motion:reduce){.responsive-picture::before{animation:none}}
+
+/* Cover scroll sticker: the arrow itself carries the chunky wordmark material. */
+.hero-editorial .hero-scroll-link{display:grid;place-items:center;width:62px;height:62px;overflow:visible;border:0;border-radius:0;background:transparent;box-shadow:none;transform:translateY(-3px);transition:transform .24s cubic-bezier(.22,1,.36,1),filter .24s ease}
+.hero-editorial .hero-scroll-link:hover{background:transparent;box-shadow:none;transform:translateY(2px);filter:brightness(1.06)}
+.hero-editorial .hero-scroll-link:focus-visible{outline:2px solid var(--blue);outline-offset:7px;border-radius:12px}
+.sticker-arrow-icon{--sticker-arrow-ink:#171716;--sticker-arrow-keyline:#f2eee5;display:block;overflow:visible}
+.sticker-arrow-outline{fill:var(--sticker-arrow-ink);stroke:var(--sticker-arrow-ink);stroke-width:11;stroke-linejoin:round}
+.sticker-arrow-face{fill:var(--sticker-arrow-ink);stroke:var(--sticker-arrow-keyline);stroke-width:5;stroke-linejoin:round}
+.sticker-arrow-spark{fill:var(--sticker-arrow-keyline)}
+.hero-scroll-icon{display:block;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 4px 0 #171716) drop-shadow(0 8px 8px rgba(25,25,22,.18));transform:rotate(-2deg);transition:transform .24s cubic-bezier(.22,1,.36,1),filter .24s ease}
+.hero-editorial .hero-scroll-link:hover .hero-scroll-icon{filter:drop-shadow(0 2px 0 #171716) drop-shadow(0 5px 6px rgba(25,25,22,.15));transform:translateY(3px) rotate(1deg)}
+@media(max-width:900px){.hero-editorial .hero-scroll-link{width:38px;height:38px}.sticker-arrow-outline{stroke-width:9}.sticker-arrow-face{stroke-width:4}}
+
+/* Reuse the same restrained sticker language at interaction points only. */
+.case-carousel-controls>button{width:50px;height:50px;overflow:visible;border:0;background:transparent;color:inherit;box-shadow:none}
+.case-carousel-controls>button:hover{background:transparent;color:inherit;transform:none}
+.carousel-sticker-arrow{width:40px;height:40px;filter:drop-shadow(0 3px 0 #171716) drop-shadow(0 6px 6px rgba(25,25,22,.14));transition:transform .22s cubic-bezier(.22,1,.36,1),filter .22s ease}
+.carousel-sticker-arrow.is-left{transform:rotate(90deg)}.carousel-sticker-arrow.is-right{transform:rotate(-90deg)}
+.case-carousel-controls>button:hover .carousel-sticker-arrow.is-left{transform:translateX(-3px) rotate(90deg)}.case-carousel-controls>button:hover .carousel-sticker-arrow.is-right{transform:translateX(3px) rotate(-90deg)}
+.case-carousel-controls>button:hover .carousel-sticker-arrow{filter:drop-shadow(0 2px 0 #171716) drop-shadow(0 4px 4px rgba(25,25,22,.12))}
+main .case-section .zoom-image .zoom-image-tilt-frame>span{top:11px;right:11px;padding:7px 10px;border:2px solid #f2eee5;border-radius:999px;background:#171716;color:#fffdfa;box-shadow:0 0 0 2px #171716,0 5px 9px rgba(25,25,22,.18);font-size:8px;font-weight:900;letter-spacing:.12em}
+main .case-section .zoom-image .zoom-image-tilt-frame>span::before{content:"✦";margin-right:5px;color:#d7c891}
+.about-contact-mail{display:inline-flex;align-items:center;gap:12px}
+.footer-sticker-arrow{flex:0 0 auto;width:34px;height:34px;filter:drop-shadow(0 3px 0 rgba(14,17,26,.85)) drop-shadow(0 6px 7px rgba(14,17,26,.2));transform:rotate(-135deg);transition:transform .22s cubic-bezier(.22,1,.36,1)}
+.about-contact-mail:hover .footer-sticker-arrow{transform:translate(3px,-3px) rotate(-135deg)}
+@media(max-width:900px){.case-carousel-controls>button{width:42px;height:42px}.carousel-sticker-arrow{width:34px;height:34px}.footer-sticker-arrow{width:27px;height:27px}.about-contact-mail{gap:8px}}
+
+/* V84 — align the compact index wordmark and its label to one left edge. */
+@media(min-width:901px){.directory-head{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);grid-template-rows:auto;align-items:center;column-gap:clamp(28px,4vw,68px);row-gap:0}.directory-head>.eyebrow{grid-column:1;grid-row:1;align-self:center;justify-self:center;padding-bottom:0;transform:none}.inside-title-float{grid-column:2;grid-row:1;justify-self:center;margin:0}.directory-absurdity{grid-column:3;grid-row:1;align-self:center;justify-self:center}}
+@media(max-width:900px){.directory-head>.eyebrow{align-self:start;justify-self:start;padding-bottom:0;transform:none}}
+
+/* V85 — color-system title leads; the project slogan becomes a quiet decorative note. */
+.aure-brand-strip .aure-palette-copy h3{display:flex;align-items:baseline;gap:clamp(10px,1vw,18px)}
+.aure-brand-strip .aure-palette-copy h3>span{flex:none;font-size:1em}
+.aure-brand-strip .aure-palette-copy h3>small{display:inline-flex;align-items:baseline;gap:.22em;padding-left:clamp(8px,.8vw,13px);border-left:1px solid currentColor;color:rgba(248,246,239,.5);font-family:Arial,"Noto Sans SC","Microsoft YaHei",sans-serif;font-size:clamp(8px,.62vw,10px);font-weight:600;line-height:1.25;letter-spacing:.08em;white-space:nowrap}
+.aure-brand-strip .aure-palette-copy h3>small em{color:#d7c891;font-family:Georgia,"Noto Serif SC",serif;font-size:1em;font-weight:400}
+.ssww-brand-strip .aure-palette-copy h3>small{color:rgba(48,40,31,.52)}
+.ssww-brand-strip .aure-palette-copy h3>small em{color:#9b5d2b}
+@media(max-width:900px){.aure-brand-strip .aure-palette-copy h3{display:block}.aure-brand-strip .aure-palette-copy h3>small{display:flex;margin-top:4px;padding-left:7px;font-size:6px;letter-spacing:.04em;white-space:normal}}
+
+/* V86 — keep the cow-and-cursor illustration as a tiny accent, never an enlarged feature. */
+.directory-absurdity{width:min(18vw,240px);max-width:240px;min-width:0}
+@media(max-width:900px){.directory-absurdity{width:min(28vw,110px);max-width:110px}}
+
+/* V87 — improve color-system reading size without enlarging the decorative slogan. */
+.aure-brand-strip .aure-palette-copy h3{font-size:clamp(24px,2.125vw,36px)}
+.aure-brand-strip .aure-palette-copy>p{font-size:11.25px}
+@media(max-width:900px){.aure-brand-strip .aure-palette-copy h3,.ssww-brand-strip .aure-palette-copy h3{font-size:18.75px}.aure-brand-strip .aure-palette-copy>p{font-size:7.5px}}
+
+/* V88 — restrained wordmark accents: one small sticker cue per composition. */
+.project-opening-topline>span:first-child::after,.about-contact-top>.eyebrow::after{content:"✦";display:inline-block;margin-left:8px;color:var(--opening-accent,var(--yellow));font-size:.95em;line-height:1;transform:translateY(-1px)}
+.aure-title-block h2::after,.aure-palette-copy h3::after,.crossborder-strategy-copy>h3::after,.ai-process-head h4::after{content:"✦";display:inline-block;flex:none;margin-left:.28em;color:var(--blue);font-family:Arial,sans-serif;font-size:.32em;font-style:normal;font-weight:900;line-height:1;vertical-align:top;transform:translateY(-.08em)}
+.aure-title-block h2::after,.aure-brand-strip .aure-palette-copy h3::after{color:#d7c891}.ssww-title-block h2::after,.ssww-brand-strip .aure-palette-copy h3::after{color:#f1dfb9}.crossborder-strategy-copy>h3::after{color:#e2efc8}
+.group-label>span,.ai-process-product-title>span{display:inline-grid;place-items:center;flex:none;width:28px;height:28px;padding:0;border:2px solid #f2eee5;border-radius:9px;background:#171716;color:#f2eee5!important;box-shadow:0 0 0 2px #171716,0 3px 6px rgba(25,25,22,.14);font-family:Arial,"Noto Sans SC","Microsoft YaHei",sans-serif!important;font-size:9px!important;font-weight:900!important;line-height:1;letter-spacing:.02em;text-align:center}
+.ai-process-product-title{align-items:center}.group-label{align-items:center}
+@media(max-width:900px){.project-opening-topline>span:first-child::after,.about-contact-top>.eyebrow::after{margin-left:5px}.aure-title-block h2::after,.aure-palette-copy h3::after,.crossborder-strategy-copy>h3::after,.ai-process-head h4::after{margin-left:.22em;font-size:.28em}.group-label>span,.ai-process-product-title>span{width:18px;height:18px;border-width:1px;border-radius:6px;box-shadow:0 0 0 1px #171716,0 2px 3px rgba(25,25,22,.12);font-size:6px!important}}
+
+/* V89 — selected micro titles become miniature wordmark labels, not generic captions. */
+.directory-head>.eyebrow,.project-opening-topline>span:first-child,.aure-strategy-head>p,.aure-title-block>p,.aure-palette-copy header>p,.crossborder-strategy-copy>header>span,.ai-process-head>div>span,.about-contact-top>.eyebrow{display:inline-flex;align-items:center;width:max-content;max-width:100%;padding:6px 10px 5px;border:2px solid #f2eee5;border-radius:10px;background:#171716;color:#f2eee5!important;box-shadow:0 0 0 2px #171716,0 3px 6px rgba(25,25,22,.14);font-family:Arial,"Noto Sans SC","Microsoft YaHei",sans-serif;font-size:clamp(7px,.62vw,10px)!important;font-weight:900;line-height:1.1;letter-spacing:.1em!important}
+.directory-head>.eyebrow::before,.aure-strategy-head>p::before,.aure-title-block>p::before,.aure-palette-copy header>p::before,.crossborder-strategy-copy>header>span::before,.ai-process-head>div>span::before{content:"✦";margin-right:6px;color:#d7c891;font-size:.92em;line-height:1}
+.project-opening-topline>span:first-child::after,.about-contact-top>.eyebrow::after{color:#d7c891}
+.group-label>div>p{display:inline-flex;width:max-content;max-width:100%;padding:4px 8px;border:1px solid #171716;border-radius:999px;background:#f2eee5;color:#171716;font-family:Arial,"Noto Sans SC","Microsoft YaHei",sans-serif;font-size:9px;font-weight:900;line-height:1;letter-spacing:.09em;box-shadow:0 2px 0 rgba(25,25,22,.12)}
+@media(max-width:900px){.directory-head>.eyebrow,.project-opening-topline>span:first-child,.aure-strategy-head>p,.aure-title-block>p,.aure-palette-copy header>p,.crossborder-strategy-copy>header>span,.ai-process-head>div>span,.about-contact-top>.eyebrow{padding:4px 6px 3px;border-width:1px;border-radius:7px;box-shadow:0 0 0 1px #171716,0 2px 3px rgba(25,25,22,.12);font-size:5.5px!important;letter-spacing:.06em!important}.directory-head>.eyebrow::before,.aure-strategy-head>p::before,.aure-title-block>p::before,.aure-palette-copy header>p::before,.crossborder-strategy-copy>header>span::before,.ai-process-head>div>span::before{margin-right:4px}.group-label>div>p{padding:3px 6px;font-size:6px}}
+@media(max-width:900px){.project-opening-artwork.is-crossborder-sticker{--sticker-scale:1.18}}

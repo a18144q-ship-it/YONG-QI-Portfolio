@@ -8,21 +8,29 @@ PUBLIC_ROOT = PROJECT_ROOT / "public"
 PREVIEW_ROOT = PUBLIC_ROOT / "preview"
 IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
 SKIP_DIRECTORIES = {"assets", "mobile", "preview"}
-SKIP_FILES = {"favicon.png", "og.png", "portfolio-ufo-cover.jpg"}
+SKIP_FILES = {"favicon.png", "og.png", "portfolio-ufo-cover.jpg", "inside-title.png", "portfolio-title.png"}
 
 
 def output_path(relative_path: Path) -> Path:
     return (PREVIEW_ROOT / relative_path).with_suffix(".webp")
 
 
-def convert(source: Path, destination: Path) -> None:
+def convert(source: Path, destination: Path, relative_path: Path) -> None:
     destination.parent.mkdir(parents=True, exist_ok=True)
     with Image.open(source) as image:
         image.seek(0)
         frame = ImageOps.exif_transpose(image.copy())
         converted = frame.convert("RGBA" if "A" in frame.getbands() else "RGB")
-        converted.thumbnail((1440, 1440), Image.Resampling.LANCZOS)
-        converted.save(destination, "WEBP", quality=82, method=6)
+        is_detail = relative_path.parts[0] == "v2"
+        is_tall_board = is_detail and converted.height / max(1, converted.width) >= 3
+        if is_tall_board and converted.width > 1000:
+            target_height = round(converted.height * (1000 / converted.width))
+            converted = converted.resize((1000, target_height), Image.Resampling.LANCZOS)
+        elif not is_tall_board:
+            max_edge = 1920 if is_detail else 1440
+            converted.thumbnail((max_edge, max_edge), Image.Resampling.LANCZOS)
+        quality = 88 if is_detail else 84
+        converted.save(destination, "WEBP", quality=quality, method=6)
 
 
 def main() -> None:
@@ -36,7 +44,7 @@ def main() -> None:
         if relative.parts[0] in SKIP_DIRECTORIES or relative.name in SKIP_FILES:
             continue
         destination = output_path(relative)
-        convert(source, destination)
+        convert(source, destination, relative)
         converted += 1
         original_bytes += source.stat().st_size
         preview_bytes += destination.stat().st_size

@@ -62,8 +62,8 @@ test("exports an upload-ready static portfolio", async () => {
   for (const file of previewFiles) {
     const info = await stat(file);
     previewBytes += info.size;
-    assert.ok(info.size < 1024 * 1024, `${file} should stay below 1 MB for progressive preview loading`);
+    assert.ok(info.size < 2 * 1024 * 1024, `${file} should stay below 2 MB for progressive preview loading`);
   }
-  assert.ok(previewBytes > 4 * 1024 * 1024 && previewBytes < 18 * 1024 * 1024, "preview image budget should stay lightweight while preserving visible quality");
+  assert.ok(previewBytes > 18 * 1024 * 1024 && previewBytes < 40 * 1024 * 1024, "preview image budget should preserve detail on high-density screens without replacing full-resolution originals");
 
 });
