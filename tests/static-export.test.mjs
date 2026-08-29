@@ -21,6 +21,8 @@ async function listFiles(directory) {
 test("exports an upload-ready static portfolio", async () => {
   const index = await readFile(new URL("index.html", outputRootUrl), "utf8");
   assert.match(index, /<title>YONG QI — Portfolio 2026<\/title>/);
+  assert.match(index, /<link rel="preload" href="\.\/portfolio-ufo-cover\.jpg" as="image" fetchpriority="high" \/>/);
+  assert.match(index, /<link rel="preload" href="\.\/portfolio-title\.png" as="image" fetchpriority="high" \/>/);
   assert.match(index, /<script type="module" crossorigin src="\.\/assets\/[^".]+\.js"><\/script>/);
   assert.match(index, /<link rel="stylesheet" crossorigin href="\.\/assets\/[^".]+\.css">/);
 
