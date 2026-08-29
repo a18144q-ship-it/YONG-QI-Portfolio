@@ -227,10 +227,12 @@ test("keeps the editorial opening system shared and ratio-safe", async () => {
   assert.match(css, /\.crossborder-strategy-strip\{[^}]*grid-template-columns:1fr[^}]*grid-template-rows:minmax\(165px,31%\) minmax\(0,69%\)/);
   assert.match(page, /video\.volume = 0/);
   assert.match(page, /document\.querySelectorAll<HTMLPictureElement>\("picture"\)/);
-  assert.match(page, /querySelectorAll<HTMLPictureElement>\("picture"\).*\.slice\(0, 5\)/);
-  assert.match(page, /Math\.ceil\(sources\.length \* 0\.8\)/);
-  assert.match(page, /loaded >= requiredLoaded/);
-  assert.match(page, /80% 页面预览已缓存/);
+  assert.match(page, /const entryContentRatio = 2 \/ 3/);
+  assert.match(page, /entryBoundary = documentHeight \* entryContentRatio/);
+  assert.match(page, /loaded === sources\.length/);
+  assert.doesNotMatch(page, /safetyTimer|80% 页面预览已缓存|张预览|共 \$\{sources\.length\} 张/);
+  assert.match(page, /preload="auto" poster="\/portfolio-ufo-cover\.jpg"/);
+  assert.match(layout, /rel="preload" href="\/portfolio-ufo-cover\.jpg" as="image"/);
   assert.match(page, /data-preload-src=\{previewSrc\}/);
   assert.match(page, /data-full-src=\{src\}/);
   assert.match(page, /rootMargin: "1800px 0px"/);

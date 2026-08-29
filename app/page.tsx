@@ -7,6 +7,7 @@ const asset = (folder: string, number: number) => `/v2/${folder}/${String(number
 const previewAsset = (src: string) => `/preview${src.replace(/\.(?:png|jpe?g|webp|gif)$/i, ".webp")}`;
 const retryAsset = (src: string, attempt: number) => `${src}${src.includes("?") ? "&" : "?"}retry=${attempt}`;
 const transparentPixel = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
+const entryContentRatio = 2 / 3;
 
 function ResponsiveImage({ src, alt, loading = "lazy", ariaHidden = false, className = "" }: { src: string; alt: string; loading?: "eager" | "lazy"; ariaHidden?: boolean; className?: string }) {
   const pictureRef = useRef<HTMLPictureElement>(null);
@@ -566,15 +567,18 @@ export default function Home() {
   const cursorRef = useRef<HTMLDivElement>(null);
   const heroVideoRef = useRef<HTMLVideoElement>(null);
   const [modal, setModal] = useState<{ src: string; alt: string } | null>(null);
-  const [modalZoom, setModalZoom] = useState(0);
+  const [modalScale, setModalScale] = useState(1);
+  const [modalBaseWidth, setModalBaseWidth] = useState(0);
   const [modalTall, setModalTall] = useState(false);
   const [modalRetry, setModalRetry] = useState(0);
   const [modalStatus, setModalStatus] = useState<"loading" | "loaded" | "error">("loading");
   const [loadProgress, setLoadProgress] = useState(0);
   const [siteReady, setSiteReady] = useState(false);
-  const [loadNotice, setLoadNotice] = useState("正在准备首屏预览");
+  const [loadNotice, setLoadNotice] = useState("正在准备封面与前段内容");
+  const clampModalScale = (value: number) => Math.min(8, Math.max(1, value));
   const open = (src: string, alt: string) => {
-    setModalZoom(0);
+    setModalScale(1);
+    setModalBaseWidth(0);
     setModalTall(false);
     setModalRetry(0);
     setModalStatus("loading");
@@ -595,29 +599,23 @@ export default function Home() {
   useEffect(() => {
     let cancelled = false;
     let finishTimer = 0;
-    let safetyTimer = 0;
     let gateOpened = false;
     const startedAt = Date.now();
     const root = document.documentElement;
     const previousOverflow = root.style.overflow;
     root.style.overflow = "hidden";
 
-    const hashTarget = window.location.hash ? document.getElementById(window.location.hash.slice(1)) : null;
-    const priorityRoot = hashTarget || document.getElementById("cases");
-    const priorityPictures = Array.from(priorityRoot?.querySelectorAll<HTMLPictureElement>("picture") || []).slice(0, 5);
     const allPictures = Array.from(document.querySelectorAll<HTMLPictureElement>("picture"));
     const readPicture = (picture: HTMLPictureElement) => {
       const image = picture.querySelector<HTMLImageElement>("img");
       return image?.dataset.preloadSrc || "";
     };
     const posterSources = Array.from(document.querySelectorAll<HTMLVideoElement>("video[poster]")).map((video) => video.poster);
-    const prioritySources = priorityPictures.map(readPicture).filter(Boolean);
-    const allSources = [...allPictures.map(readPicture), ...posterSources].filter(Boolean);
-    const uniqueSources = [...new Set(allSources)];
-    const prioritySet = new Set(prioritySources);
-    const sources = [...prioritySources, ...uniqueSources.filter((source) => !prioritySet.has(source))];
-    const requiredLoaded = Math.max(1, Math.ceil(sources.length * 0.8));
-    let completed = 0;
+    const documentHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+    const entryBoundary = documentHeight * entryContentRatio;
+    const entryPictures = allPictures.filter((picture) => picture.getBoundingClientRect().top + window.scrollY <= entryBoundary);
+    const coverSources = ["/portfolio-title.png", ...posterSources];
+    const sources = [...new Set([...coverSources, ...entryPictures.map(readPicture)].filter(Boolean))];
     let loaded = 0;
     let cursor = 0;
 
@@ -633,38 +631,38 @@ export default function Home() {
       }, minimumDisplay);
     };
 
-    const advance = (didLoad: boolean) => {
-      completed += 1;
-      if (didLoad) loaded += 1;
+    const advance = () => {
+      loaded += 1;
       if (cancelled) return;
-      setLoadProgress(Math.round((loaded / Math.max(1, sources.length)) * 100));
-      setLoadNotice(`已缓存 ${loaded} / ${sources.length} 张预览`);
-      if (loaded >= requiredLoaded) releaseSite("80% 页面预览已缓存，正在进入");
-      else if (completed >= sources.length) releaseSite("可用预览已完成缓存，未完成图片将在页面内重试");
+      const progress = Math.round((loaded / Math.max(1, sources.length)) * 100);
+      setLoadProgress(progress);
+      setLoadNotice(progress < 45 ? "正在载入封面与前段内容" : progress < 85 ? "正在完成页面预览" : "正在确认进入条件");
+      if (loaded === sources.length) releaseSite("前段内容已准备完成，正在进入");
     };
-    const preload = (preview: string) => new Promise<boolean>((resolve) => {
-      const candidates = [preview, retryAsset(preview, 1)];
-      let candidateIndex = 0;
+    const preload = (preview: string) => new Promise<void>((resolve) => {
+      let attempt = 0;
       const load = () => {
+        if (cancelled) return;
         const image = new Image();
         let settled = false;
         let timeout = 0;
-        const settle = (loaded: boolean) => {
+        const settle = (didLoad: boolean) => {
           if (settled) return;
           settled = true;
           window.clearTimeout(timeout);
-          if (!loaded && candidateIndex < candidates.length - 1) {
-            candidateIndex += 1;
-            window.setTimeout(load, 350);
+          if (!didLoad) {
+            attempt += 1;
+            setLoadNotice("网络较慢，正在继续准备前段内容");
+            window.setTimeout(load, Math.min(3000, 400 + attempt * 300));
             return;
           }
-          resolve(loaded);
+          resolve();
         };
-        timeout = window.setTimeout(() => settle(false), 7000);
+        timeout = window.setTimeout(() => settle(false), 12000);
         image.onload = () => settle(true);
         image.onerror = () => settle(false);
         image.decoding = "async";
-        image.src = candidates[candidateIndex];
+        image.src = attempt ? retryAsset(preview, attempt) : preview;
         if (image.complete && image.naturalWidth > 0) settle(true);
       };
       load();
@@ -674,18 +672,17 @@ export default function Home() {
       while (!cancelled && cursor < sources.length) {
         const source = sources[cursor];
         cursor += 1;
-        advance(await preload(source));
+        await preload(source);
+        advance();
       }
     };
     const workerCount = window.matchMedia("(max-width: 900px)").matches ? 3 : 6;
-    setLoadNotice(`正在缓存 80% 的页面预览 · 共 ${sources.length} 张`);
+    setLoadNotice("正在载入封面与前段内容");
     void Promise.all(Array.from({ length: workerCount }, worker));
-    safetyTimer = window.setTimeout(() => releaseSite("网络较慢，剩余预览将在页面内继续加载"), 90000);
 
     return () => {
       cancelled = true;
       window.clearTimeout(finishTimer);
-      window.clearTimeout(safetyTimer);
       root.style.overflow = previousOverflow;
     };
   }, []);
@@ -743,9 +740,14 @@ export default function Home() {
     };
   }, []);
   useEffect(() => {
-    const close = (event: KeyboardEvent) => event.key === "Escape" && setModal(null);
-    window.addEventListener("keydown", close);
-    return () => window.removeEventListener("keydown", close);
+    const handleLightboxKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setModal(null);
+      if (event.key === "+" || event.key === "=") setModalScale((value) => clampModalScale(value + .25));
+      if (event.key === "-") setModalScale((value) => clampModalScale(value - .25));
+      if (event.key === "0") setModalScale(1);
+    };
+    window.addEventListener("keydown", handleLightboxKey);
+    return () => window.removeEventListener("keydown", handleLightboxKey);
   }, []);
   useEffect(() => {
     const video = heroVideoRef.current;
@@ -809,7 +811,7 @@ export default function Home() {
         <div className="hero-bottom"><p>产品视觉 · 三维渲染 · AI 图像</p><a href="#cases" className="circle-link hero-scroll-link" aria-label="向下滚动查看案例"><DownArrow /></a></div>
       </div>
       <div className="hero-art reveal">
-        <video ref={heroVideoRef} autoPlay loop muted playsInline preload="metadata" poster="/portfolio-ufo-cover.jpg" aria-label="UFO 光束吸起奶牛与斑马的动态封面">
+        <video ref={heroVideoRef} autoPlay loop muted playsInline preload="auto" poster="/portfolio-ufo-cover.jpg" aria-label="UFO 光束吸起奶牛与斑马的动态封面">
           <source src="/portfolio-ufo-cover.mp4" type="video/mp4" />
         </video>
       </div>
@@ -860,6 +862,46 @@ export default function Home() {
         <div className="about-contact-meta"><span>YONG QI · VISUAL DESIGNER</span><span>© 2026</span></div>
       </div>
     </footer>
-    {modal && <div className={`lightbox is-${modalStatus} ${modalZoom ? `is-zoomed zoom-${modalZoom}` : ""} ${modalTall ? "is-long" : ""}`} role="dialog" aria-modal="true" aria-label={modal.alt} onClick={() => setModal(null)}><button type="button" onClick={() => setModal(null)} aria-label="关闭大图">×</button><div className="lightbox-status" role="status">{modalStatus === "error" ? "高清原图加载失败，请重新打开" : "正在加载高清原图…"}</div><img key={`${modal.src}-${modalRetry}`} src={modalRetry ? retryAsset(modal.src, modalRetry) : modal.src} alt={modal.alt} onLoad={(event) => { setModalStatus("loaded"); setModalTall(event.currentTarget.naturalHeight / event.currentTarget.naturalWidth > 2.2); }} onError={() => { if (modalRetry < 2) { setModalRetry((value) => value + 1); setModalStatus("loading"); } else setModalStatus("error"); }} onClick={(event) => { event.stopPropagation(); if (modalStatus === "loaded") setModalZoom((value) => value === 3 ? 0 : value + 1); }} /><span className="zoom-hint">{modalZoom === 0 ? "再次点击图片放大" : modalZoom === 3 ? "再次点击回到适屏" : `再次点击继续放大 · ${modalZoom}/3`}</span></div>}
+    {modal && <div className={`lightbox is-continuous-zoom is-${modalStatus} ${modalTall ? "is-long" : ""} ${modalScale > 1.01 ? "is-scaled" : ""}`} role="dialog" aria-modal="true" aria-label={modal.alt}>
+      <button className="lightbox-close" type="button" onClick={() => setModal(null)} aria-label="关闭大图">×</button>
+      <div className="lightbox-status" role="status">{modalStatus === "error" ? "高清原图加载失败，请重新打开" : "正在加载高清原图…"}</div>
+      <div className="lightbox-viewport" onClick={() => setModal(null)} onWheel={(event) => {
+        if (modalStatus !== "loaded") return;
+        event.preventDefault();
+        setModalScale((value) => clampModalScale(value * Math.exp(-event.deltaY * .0012)));
+      }}>
+        <div className="lightbox-stage">
+          <img
+            className="lightbox-image"
+            key={`${modal.src}-${modalRetry}`}
+            src={modalRetry ? retryAsset(modal.src, modalRetry) : modal.src}
+            alt={modal.alt}
+            style={{ width: modalBaseWidth ? `${modalBaseWidth * modalScale}px` : undefined }}
+            onLoad={(event) => {
+              const image = event.currentTarget;
+              const isLong = image.naturalHeight / image.naturalWidth > 2.2;
+              const compact = window.innerWidth <= 900;
+              const availableWidth = window.innerWidth - (compact ? 32 : 128);
+              const availableHeight = window.innerHeight - (compact ? 104 : 128);
+              setModalStatus("loaded");
+              setModalTall(isLong);
+              setModalBaseWidth(Math.max(1, Math.min(image.naturalWidth, availableWidth, availableHeight * image.naturalWidth / image.naturalHeight)));
+            }}
+            onError={() => { if (modalRetry < 2) { setModalRetry((value) => value + 1); setModalStatus("loading"); } else setModalStatus("error"); }}
+            onClick={(event) => {
+              event.stopPropagation();
+              if (modalStatus === "loaded") setModalScale((value) => value > 1.01 ? 1 : 2);
+            }}
+          />
+        </div>
+      </div>
+      <div className="lightbox-zoom-controls" aria-label="图片连续缩放控制" onClick={(event) => event.stopPropagation()}>
+        <button type="button" onClick={() => setModalScale((value) => clampModalScale(value - .25))} aria-label="缩小图片">−</button>
+        <input type="range" min="1" max="8" step="0.05" value={modalScale} onChange={(event) => setModalScale(clampModalScale(Number(event.currentTarget.value)))} aria-label="连续调整图片大小" />
+        <button type="button" onClick={() => setModalScale((value) => clampModalScale(value + .25))} aria-label="放大图片">＋</button>
+        <output>{Math.round(modalScale * 100)}%</output>
+      </div>
+      <span className="zoom-hint">滚轮或滑杆无级缩放 · 点击图片快速切换 100% / 200%</span>
+    </div>}
   </main></>;
 }

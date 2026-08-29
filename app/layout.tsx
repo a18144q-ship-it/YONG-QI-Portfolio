@@ -22,5 +22,5 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="zh-CN"><body>{children}</body></html>;
+  return <html lang="zh-CN"><head><link rel="preload" href="/portfolio-ufo-cover.jpg" as="image" /><link rel="preload" href="/portfolio-title.png" as="image" /></head><body>{children}</body></html>;
 }

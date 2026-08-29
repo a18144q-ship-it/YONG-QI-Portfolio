@@ -914,3 +914,131 @@ main .case-section .zoom-image .zoom-image-tilt-frame>span::before{content:"✦"
 .group-label>div>p{display:inline-flex;width:max-content;max-width:100%;padding:4px 8px;border:1px solid #171716;border-radius:999px;background:#f2eee5;color:#171716;font-family:Arial,"Noto Sans SC","Microsoft YaHei",sans-serif;font-size:9px;font-weight:900;line-height:1;letter-spacing:.09em;box-shadow:0 2px 0 rgba(25,25,22,.12)}
 @media(max-width:900px){.directory-head>.eyebrow,.project-opening-topline>span:first-child,.aure-strategy-head>p,.aure-title-block>p,.aure-palette-copy header>p,.crossborder-strategy-copy>header>span,.ai-process-head>div>span,.about-contact-top>.eyebrow{padding:4px 6px 3px;border-width:1px;border-radius:7px;box-shadow:0 0 0 1px #171716,0 2px 3px rgba(25,25,22,.12);font-size:5.5px!important;letter-spacing:.06em!important}.directory-head>.eyebrow::before,.aure-strategy-head>p::before,.aure-title-block>p::before,.aure-palette-copy header>p::before,.crossborder-strategy-copy>header>span::before,.ai-process-head>div>span::before{margin-right:4px}.group-label>div>p{padding:3px 6px;font-size:6px}}
 @media(max-width:900px){.project-opening-artwork.is-crossborder-sticker{--sticker-scale:1.18}}
+
+/* V90 — continuous lightbox zoom, safer portrait crops and a larger workflow reading scale. */
+.lightbox.is-continuous-zoom{display:block;overflow:hidden;padding:0;cursor:default}
+.lightbox.is-continuous-zoom .lightbox-close{z-index:6}
+.lightbox-viewport{position:absolute;z-index:1;inset:0;overflow:auto;overscroll-behavior:contain;scrollbar-color:rgba(255,255,255,.45) transparent}
+.lightbox-stage{box-sizing:border-box;display:grid;place-items:center;width:max-content;min-width:100%;min-height:100%;padding:64px}
+.lightbox.is-long .lightbox-stage{place-items:start center;padding-top:64px;padding-bottom:110px}
+.lightbox.is-continuous-zoom .lightbox-image{display:block;max-width:none;max-height:none;height:auto;margin:0;opacity:0;transform:none!important;transform-origin:center;cursor:zoom-in;box-shadow:0 18px 80px #000;transition:width .12s linear,opacity .28s ease}
+.lightbox.is-continuous-zoom.is-loaded .lightbox-image{opacity:1}
+.lightbox.is-continuous-zoom.is-scaled .lightbox-image{cursor:zoom-out}
+.lightbox-zoom-controls{position:fixed;z-index:6;left:50%;bottom:18px;display:grid;grid-template-columns:32px minmax(128px,220px) 32px 50px;gap:8px;align-items:center;padding:8px 10px;border:1px solid rgba(255,255,255,.24);border-radius:999px;background:rgba(15,17,19,.82);color:#fff;box-shadow:0 12px 34px rgba(0,0,0,.34);backdrop-filter:blur(12px);transform:translateX(-50%)}
+.lightbox .lightbox-zoom-controls button{position:static;display:grid;place-items:center;width:32px;height:32px;padding:0;border:1px solid rgba(255,255,255,.3);border-radius:50%;background:rgba(255,255,255,.08);color:#fff;font-size:19px;line-height:1}
+.lightbox-zoom-controls input{width:100%;accent-color:#d7c891;cursor:ew-resize}
+.lightbox-zoom-controls output{font-size:10px;font-variant-numeric:tabular-nums;letter-spacing:.06em;text-align:center}
+.lightbox.is-continuous-zoom .zoom-hint{bottom:76px;white-space:nowrap}
+
+.ai-process-board{width:min(100%,1360px)}
+.ai-process-secondary-row>.ai-process-secondary-product:nth-child(2) .ai-process-feature-item:nth-child(1) img{object-position:center top}
+.ai-process-head>p{font-size:13.2px}.ai-process-head>div>span{font-size:clamp(8.4px,.744vw,12px)!important}
+.ai-process-product-title{font-size:clamp(18px,1.62vw,24px)}
+.ai-process-product-title>span{width:32px;height:32px;font-size:10.8px!important}
+.ai-process-feature-item .ai-process-meta>span{font-size:16.8px}.ai-process-feature-item .ai-process-meta h5{font-size:10.8px}
+
+.project-opening-facts>div{padding:clamp(18px,1.62vw,25px) clamp(14px,1.68vw,26px)}
+.project-opening-facts dt{font-size:9.6px}.project-opening-facts dd{font-size:clamp(13.2px,.984vw,16.8px)}
+
+@media(max-width:900px){
+  .lightbox-stage{padding:52px 16px 118px}.lightbox.is-long .lightbox-stage{padding:52px 16px 118px}
+  .lightbox-zoom-controls{bottom:14px;grid-template-columns:30px minmax(100px,42vw) 30px 44px;gap:6px;padding:7px 8px}
+  .lightbox .lightbox-zoom-controls button{width:30px;height:30px;font-size:17px}
+  .lightbox.is-continuous-zoom .zoom-hint{bottom:68px;max-width:calc(100vw - 24px);overflow:hidden;text-overflow:ellipsis;font-size:8px}
+  .ai-process-board{width:100%}.ai-process-head>p{font-size:8.4px}.ai-process-head>div>span{font-size:6.6px!important}
+  .ai-process-product-title{font-size:9.6px}.ai-process-product-title>span{width:22px;height:22px;font-size:7.2px!important}
+  .ai-process-feature-item .ai-process-meta>span{font-size:8.4px}.ai-process-feature-item .ai-process-meta h5{font-size:6px}
+  .project-opening-facts>div{padding:10px 6px}.project-opening-facts dt{font-size:6px}.project-opening-facts dd{font-size:8.4px}
+}
+
+/* V91 — audience cards echo the wordmark through light keylines and tiny spark details. */
+.aure-insight-grid{
+  --insight-sticker-paper:rgba(215,200,145,.25);
+  --insight-sticker-accent:#d7c891;
+  gap:0;
+  overflow:hidden;
+  padding:0;
+  border:1px solid var(--insight-sticker-paper);
+  border-radius:12px;
+  background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.02));
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.025),0 9px 22px rgba(5,10,18,.1);
+}
+.ssww-strategy-panel .aure-insight-grid{--insight-sticker-paper:rgba(255,255,255,.24);--insight-sticker-accent:#d9e5f6}
+.aure-insight-grid>div,.ssww-strategy-panel .aure-insight-grid>div{
+  position:relative;
+  overflow:hidden;
+  padding:15px 16px 16px;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  color:#f8f6ef;
+  box-shadow:none;
+}
+.aure-insight-grid>div::before,.aure-insight-grid>div:nth-child(2)::before{
+  content:"✦";
+  position:absolute;
+  z-index:2;
+  left:auto;
+  right:12px;
+  top:11px;
+  width:auto;
+  height:auto;
+  background:none;
+  color:var(--insight-sticker-accent);
+  font-size:8px;
+  opacity:.82;
+  line-height:1;
+  transform:none;
+  pointer-events:none;
+}
+.aure-insight-grid>div:nth-child(2)::after{display:block;content:"";position:absolute;left:0;top:14%;width:1px;height:72%;border:0;background:var(--insight-sticker-paper);clip-path:none;transform:none;opacity:.7}
+.aure-insight-grid span,.ssww-strategy-panel .aure-insight-grid span{max-width:calc(100% - 20px);color:rgba(205,216,228,.62);font-weight:800;letter-spacing:.1em}
+.ssww-strategy-panel .aure-insight-grid span{color:rgba(255,255,255,.66)}
+.aure-insight-grid strong{position:relative;z-index:1;color:#f8f6ef;font-size:clamp(11.5px,.78vw,13px);letter-spacing:-.01em;line-height:1.6;text-shadow:none}
+
+@media(max-width:900px){
+  .aure-insight-grid{gap:0;padding:0;border-width:1px;border-radius:8px;box-shadow:0 5px 12px rgba(5,10,18,.08)}
+  .aure-insight-grid>div,.ssww-strategy-panel .aure-insight-grid>div{padding:7px 8px 8px;border-radius:0!important;box-shadow:none}
+  .aure-insight-grid>div::before,.aure-insight-grid>div:nth-child(2)::before{right:6px;top:6px;font-size:5px}
+  .aure-insight-grid span,.ssww-strategy-panel .aure-insight-grid span{max-width:calc(100% - 12px)}
+  .aure-insight-grid strong{font-size:6px;line-height:1.35}
+}
+
+/* V92 — the roll-bar strategy matrix uses the same restrained translucent card language. */
+.crossborder-strategy-grid{
+  overflow:hidden;
+  border:1px solid rgba(226,239,200,.25);
+  border-radius:12px;
+  background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.02),0 9px 22px rgba(32,40,33,.1);
+}
+.crossborder-strategy-grid article{
+  position:relative;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+.crossborder-strategy-grid article:nth-child(odd){border-right:1px solid rgba(226,239,200,.18)}
+.crossborder-strategy-grid article:nth-child(-n+2){border-bottom:1px solid rgba(226,239,200,.18)}
+.crossborder-strategy-grid article::before{
+  content:"✦";
+  display:block;
+  position:absolute;
+  z-index:2;
+  right:12px;
+  top:11px;
+  color:#e2efc8;
+  font-size:8px;
+  line-height:1;
+  opacity:.78;
+  pointer-events:none;
+}
+.crossborder-strategy-grid article::after{display:none}
+.crossborder-strategy-grid article>span{max-width:calc(100% - 20px);color:rgba(226,239,200,.76);font-weight:800}
+
+@media(max-width:900px){
+  .crossborder-strategy-grid{border-radius:8px;box-shadow:0 5px 12px rgba(32,40,33,.08)}
+  .crossborder-strategy-grid article::before{right:6px;top:6px;font-size:5px}
+  .crossborder-strategy-grid article>span{max-width:calc(100% - 12px)}
+}
