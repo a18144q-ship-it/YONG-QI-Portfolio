@@ -1253,15 +1253,20 @@ main .case-section .zoom-image .zoom-image-tilt-frame>span::before{content:"✦"
   .case-carousel-controls{margin-top:12px}
 }
 
-/* V99 — give every creative-direction badge more breathing room above and below. */
+/* V104 — open up every creative-direction badge/title pairing. */
 .aure-title-block>p{
-  margin:clamp(6px,.55vw,9px) 0 clamp(14px,1vw,18px);
+  margin:clamp(8px,.75vw,12px) 0 clamp(22px,1.45vw,28px);
 }
 .crossborder-strategy-copy>header>span{
-  margin-block:clamp(5px,.45vw,8px);
+  margin:clamp(7px,.6vw,10px) 0 clamp(14px,1vw,18px);
 }
 .crossborder-strategy-copy>h3{
-  margin-top:clamp(22px,2vw,30px);
+  margin-top:clamp(28px,2.4vw,36px);
+}
+@media(max-width:900px){
+  .aure-title-block>p{margin:7px 0 18px}
+  .crossborder-strategy-copy>header>span{margin:6px 0 11px}
+  .crossborder-strategy-copy>h3{margin-top:20px}
 }
 
 /* V100 — identify the dedicated modeling tools without competing with the study label. */
@@ -1385,4 +1390,9 @@ main .case-section .zoom-image .zoom-image-tilt-frame>span::before{content:"✦"
 
 .carousel-card.case-crossborder.is-center:hover .tile-art img {
   transform: scale(1.32);
+}
+
+/* V105 — increase the tracking of every large carousel title by 4%. */
+.carousel-card .tile-label h3 {
+  letter-spacing: .04em;
 }

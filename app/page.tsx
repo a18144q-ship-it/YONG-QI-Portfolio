@@ -79,7 +79,7 @@ function ResponsiveImage({ src, alt, loading = "lazy", ariaHidden = false, class
 const catalogue = [
   { href: "#aure", id: "01", title: "耳机视觉", sub: "AURE BUDS PRO", image: asset("aure", 1), className: "case-aure" },
   { href: "#ssww", id: "02", title: "卫浴视觉", sub: "SSWW BATH", image: asset("ssww", 1), className: "case-ssww" },
-  { href: "#crossborder", id: "03", title: "Amazon汽配", sub: "TRUCK ROLL BAR", image: "/v2/crossborder/truck-roll-bar/amazon-auto-parts-card.jpg", className: "case-crossborder" },
+  { href: "#crossborder", id: "03", title: "跨境电商设计", sub: "TRUCK ROLL BAR", image: "/v2/crossborder/truck-roll-bar/amazon-auto-parts-card.jpg", className: "case-crossborder" },
   { href: "#renders", id: "04", title: "产品渲染", sub: "PRODUCT RENDERS", image: asset("renders", 7), className: "case-renders" },
   { href: "#aigc", id: "05", title: "AI视觉设计", sub: "IMAGE · AI", image: asset("aigc", 7), className: "case-aigc" },
 ];

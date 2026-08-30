@@ -225,8 +225,8 @@ test("keeps the editorial opening system shared and ratio-safe", async () => {
   assert.match(css, /\.carousel-card \.tile-label h3\{[^}]*max-width:100%[^}]*font-size:clamp\(15px,4\.7vw,19px\)/);
   assert.doesNotMatch(page, /function Arrow\(\)/);
   assert.doesNotMatch(page, /<Arrow \/>/);
-  assert.match(css, /\.aure-title-block>p\{[^}]*margin:clamp\(6px,\.55vw,9px\) 0 clamp\(14px,1vw,18px\)/);
-  assert.match(css, /\.crossborder-strategy-copy>header>span\{[^}]*margin-block:clamp\(5px,\.45vw,8px\)/);
+  assert.match(css, /\.aure-title-block>p\{[^}]*margin:clamp\(8px,\.75vw,12px\) 0 clamp\(22px,1\.45vw,28px\)/);
+  assert.match(css, /\.crossborder-strategy-copy>header>span\{[^}]*margin:clamp\(7px,\.6vw,10px\) 0 clamp\(14px,1vw,18px\)/);
   assert.match(css, /\.project-opening-artwork\.is-sticker-artwork/);
   assert.match(css, /--sticker-shadow-x/);
   assert.match(css, /--sticker-glint-x/);
@@ -313,7 +313,8 @@ test("keeps the editorial opening system shared and ratio-safe", async () => {
   assert.match(css, /\.site-preparing\{height:auto;overflow:visible\}/);
   assert.match(css, /\.aure-brand-strip \.aure-product-cutout::before,\.aure-brand-strip \.aure-product-cutout::after\{display:none!important\}/);
   assert.match(css, /\.hero-editorial \.hero-art video\{left:0;top:50%;inset:auto;width:100%;height:auto/);
-  assert.match(page, /title: "Amazon汽配"[^\n]*amazon-auto-parts-card\.jpg/);
+  assert.match(page, /title: "跨境电商设计"[^\n]*amazon-auto-parts-card\.jpg/);
+  assert.match(css, /\.carousel-card \.tile-label h3\s*\{[^}]*letter-spacing: \.04em/);
   assert.match(css, /\.carousel-card\.case-crossborder \.tile-art img\s*\{[^}]*transform: scale\(1\.32\)[^}]*transform-origin: 50% 68%/);
   assert.match(layout, /colorScheme: "light"/);
   assert.match(layout, /YONG QI — Portfolio 2026/);
