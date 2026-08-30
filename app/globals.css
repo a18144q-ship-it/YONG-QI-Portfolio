@@ -61,6 +61,7 @@
   grid-column: span 4;
   aspect-ratio: 4 / 5;
 }
+
 .layout-hardware .zoom-image:nth-child(4),
 .layout-hardware .zoom-image:nth-child(5),
 .layout-hardware .zoom-image:nth-child(6),
@@ -265,15 +266,15 @@
 @media(max-width:900px){.render-section:after{top:80px;right:48px;opacity:.26}}
 
 /* V53 — place the abstract cover textures inside the strategy panels */
-.strategy-textures{position:absolute;z-index:0;inset:0;overflow:hidden;border-radius:inherit;pointer-events:none}.strategy-textures i{position:absolute;display:block}.strategy-cow-spots{top:8%;right:-7%;width:clamp(150px,15vw,230px);aspect-ratio:1.35;background:radial-gradient(ellipse at 20% 22%,rgba(248,246,239,.9) 0 10%,transparent 11%),radial-gradient(ellipse at 68% 18%,rgba(248,246,239,.9) 0 14%,transparent 15%),radial-gradient(ellipse at 45% 64%,rgba(248,246,239,.9) 0 18%,transparent 19%),radial-gradient(ellipse at 86% 78%,rgba(248,246,239,.9) 0 11%,transparent 12%);opacity:.045;transform:rotate(11deg)}.strategy-ufo-beam{right:8%;top:31%;width:clamp(82px,8vw,122px);height:36%;background:linear-gradient(180deg,rgba(74,108,184,.9),rgba(74,108,184,.08));clip-path:polygon(38% 0,62% 0,100% 100%,0 100%);opacity:.065;transform:rotate(-5deg)}.ssww-strategy-panel .strategy-cow-spots{opacity:.035}.ssww-strategy-panel .strategy-ufo-beam{opacity:.04}
-@media(max-width:900px){.strategy-cow-spots{right:-18%;width:180px}.strategy-ufo-beam{right:4%;width:86px;opacity:.045}}
+.strategy-textures{position:absolute;z-index:0;inset:0;overflow:hidden;border-radius:inherit;pointer-events:none}.strategy-textures i{position:absolute;display:block}.strategy-cow-spots{top:8%;right:-7%;width:clamp(150px,15vw,230px);aspect-ratio:1.35;background:radial-gradient(ellipse at 20% 22%,rgba(248,246,239,.9) 0 10%,transparent 11%),radial-gradient(ellipse at 68% 18%,rgba(248,246,239,.9) 0 14%,transparent 15%),radial-gradient(ellipse at 45% 64%,rgba(248,246,239,.9) 0 18%,transparent 19%),radial-gradient(ellipse at 86% 78%,rgba(248,246,239,.9) 0 11%,transparent 12%);opacity:.045;transform:rotate(11deg)}.ssww-strategy-panel .strategy-cow-spots{opacity:.035}
+@media(max-width:900px){.strategy-cow-spots{right:-18%;width:180px}}
 
 /* V54 — cleaner strategy panels and more organic cow-hide patches */
 .aure-strategy-panel .aure-strategy-head{border-bottom:0}.aure-strategy-panel .aure-context{border-top:0;border-bottom:0}.aure-strategy-panel .aure-selling-label{border-top:0}.aure-strategy-panel .aure-proof-points li{border-top:0}.aure-strategy-panel .aure-direction{border-top:0}
 .strategy-cow-spots,.ssww-strategy-panel .strategy-cow-spots{background:none;opacity:1}.strategy-cow-spots b{position:absolute;display:block;background:rgba(248,246,239,.82);opacity:.052}.strategy-cow-spots b:nth-child(1){left:2%;top:5%;width:42%;height:31%;border-radius:68% 32% 57% 43% / 42% 64% 36% 58%;transform:rotate(-13deg)}.strategy-cow-spots b:nth-child(2){right:1%;top:2%;width:35%;height:43%;border-radius:38% 62% 31% 69% / 66% 41% 59% 34%;transform:rotate(17deg)}.strategy-cow-spots b:nth-child(3){left:27%;bottom:3%;width:48%;height:36%;border-radius:61% 39% 70% 30% / 37% 58% 42% 63%;transform:rotate(8deg)}.strategy-cow-spots b:nth-child(4){right:-4%;bottom:8%;width:24%;height:26%;border-radius:46% 54% 34% 66% / 65% 35% 62% 38%;transform:rotate(-21deg)}.ssww-strategy-panel .strategy-cow-spots b{opacity:.042}
 
 /* V55 — match the bath panel and reveal a smaller complete cow pattern */
-.strategy-cow-spots,.ssww-strategy-panel .strategy-cow-spots{right:2%;width:clamp(105px,10.5vw,161px)}.ssww-strategy-panel .strategy-cow-spots b{opacity:.052}.ssww-strategy-panel .strategy-ufo-beam{opacity:.065}
+.strategy-cow-spots,.ssww-strategy-panel .strategy-cow-spots{right:2%;width:clamp(105px,10.5vw,161px)}.ssww-strategy-panel .strategy-cow-spots b{opacity:.052}
 @media(max-width:900px){.strategy-cow-spots,.ssww-strategy-panel .strategy-cow-spots{right:-2%;width:126px}}
 
 /* V56 — compact product-rendering heading with the untouched mirrored illustration */
@@ -561,8 +562,8 @@ main .case-section .zoom-image.reveal.is-visible.is-pointer-tilting{
   --tilt-scale:1.012;
 }
 main .case-section .zoom-image:before{display:none}
-main .case-section .zoom-image-tilt-frame:before{content:"";position:absolute;z-index:1;inset:-20% auto -20% -45%;width:38%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.38),transparent);transform:translateX(-160%) skewX(-16deg);transition:transform .9s cubic-bezier(.22,1,.36,1);pointer-events:none}
-main .case-section .zoom-image:hover .zoom-image-tilt-frame:before{transform:translateX(470%) skewX(-16deg)}
+main .case-section .zoom-image-tilt-frame:before{content:"";position:absolute;z-index:1;inset:-20% auto -20% -45%;width:38%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.38),transparent);opacity:0;transform:translateX(-160%) skewX(-16deg);transition:transform .9s cubic-bezier(.22,1,.36,1),opacity .16s ease;pointer-events:none}
+main .case-section .zoom-image.is-pointer-tilting .zoom-image-tilt-frame:before{opacity:1;transform:translateX(470%) skewX(-16deg)}
 @media(prefers-reduced-motion:reduce){main .case-section .zoom-image.reveal.is-visible>.zoom-image-tilt-frame{transform:none;box-shadow:none;transition:none}}
 
 /* Two automotive AI workflows share one uninterrupted row; each follows the supplied two-small / one-large composition. */
@@ -1041,4 +1042,347 @@ main .case-section .zoom-image .zoom-image-tilt-frame>span::before{content:"✦"
   .crossborder-strategy-grid{border-radius:8px;box-shadow:0 5px 12px rgba(32,40,33,.08)}
   .crossborder-strategy-grid article::before{right:6px;top:6px;font-size:5px}
   .crossborder-strategy-grid article>span{max-width:calc(100% - 12px)}
+}
+
+/* V93 — clearer proof typography, panel-toned labels, and a richer strategy matrix. */
+.aure-proof-points span{
+  color:#f1ddb0;
+  font-family:Georgia,"Times New Roman",serif;
+  font-weight:400;
+  letter-spacing:.01em;
+}
+.ssww-strategy-panel .aure-proof-points span{color:#f1dfb9}
+
+.aure-strategy-panel:not(.ssww-strategy-panel) .aure-title-block>p{
+  border-color:#d7c891;
+  background:#10283c;
+  box-shadow:0 0 0 2px #10283c,0 3px 7px rgba(4,12,21,.2);
+}
+.ssww-strategy-panel .aure-title-block>p{
+  border-color:#f1dfb9;
+  background:#79634d;
+  box-shadow:0 0 0 2px #79634d,0 3px 7px rgba(82,62,43,.18);
+}
+.aure-brand-strip:not(.ssww-brand-strip) .aure-palette-copy header>p{
+  border-color:#d7c891;
+  background:#0a2235;
+  box-shadow:0 0 0 2px #0a2235,0 3px 7px rgba(3,11,19,.2);
+}
+.ssww-brand-strip .aure-palette-copy header>p{
+  border-color:#eee2cc;
+  background:#8d7b67;
+  box-shadow:0 0 0 2px #8d7b67,0 3px 7px rgba(82,68,53,.16);
+}
+.crossborder-strategy-copy>header>span{
+  border-color:#dbe8d2;
+  background:#5b6a5e;
+  box-shadow:0 0 0 2px #5b6a5e,0 3px 7px rgba(38,52,41,.17);
+}
+
+.crossborder-strategy-grid article>span{
+  font-size:clamp(10px,.68vw,11px);
+  letter-spacing:.08em;
+}
+.crossborder-strategy-grid article p{
+  font-size:clamp(12px,.86vw,14px);
+  line-height:1.62;
+}
+.crossborder-strategy-grid article strong{font-size:1.12em}
+
+@media(max-width:900px){
+  .crossborder-strategy-grid article>span{font-size:7px;line-height:1.25}
+  .crossborder-strategy-grid article p{font-size:8px;line-height:1.48}
+}
+
+/* V94 — keep AI workflow step badges subordinate to the product imagery. */
+.ai-process-feature-item .ai-process-meta{
+  gap:5px;
+  padding:5px 7px;
+}
+.ai-process-feature-item .ai-process-meta>span{font-size:13px}
+.ai-process-feature-item .ai-process-meta h5{font-size:8px}
+
+@media(max-width:900px){
+  .ai-process-feature-item .ai-process-meta{
+    left:3px;
+    right:3px;
+    bottom:3px;
+    gap:2px;
+    max-width:calc(100% - 6px);
+    padding:2px 3px;
+    border-radius:5px;
+  }
+  .ai-process-feature-item .ai-process-meta>span{font-size:6.5px}
+  .ai-process-feature-item .ai-process-meta h5{font-size:4.8px;letter-spacing:0}
+}
+
+/* V95 — mobile project facts stay on one shared baseline instead of forming uneven text stacks. */
+@media(max-width:560px){
+  .project-opening-facts{align-items:stretch}
+  .project-opening-facts>div,
+  .project-opening-facts>div:first-child,
+  .project-opening-facts>div:nth-child(odd){
+    display:grid;
+    grid-template-rows:8px minmax(0,1fr);
+    align-content:start;
+    min-height:48px;
+    padding:7px 4px!important;
+  }
+  .project-opening-facts dt{
+    height:8px;
+    margin:0;
+    overflow:visible;
+    font-size:4.6px;
+    line-height:1;
+    letter-spacing:.015em;
+    white-space:nowrap;
+  }
+  .project-opening-facts dd{
+    align-self:start;
+    margin:0;
+    font-size:clamp(5px,1.42vw,5.8px);
+    line-height:1.3;
+    letter-spacing:-.025em;
+    text-wrap:balance;
+  }
+}
+
+/* V96 — the six listing tiles and the A+ page share one aligned mobile edge. */
+@media(max-width:560px){
+  .crossborder-showcase{align-items:stretch}
+  .crossborder-square-grid{
+    height:100%;
+    grid-template-rows:repeat(3,minmax(0,1fr));
+    align-content:stretch;
+  }
+  .crossborder-square-grid .zoom-image{
+    min-height:0;
+    height:100%;
+    aspect-ratio:auto;
+  }
+  .crossborder-a-plus{align-self:stretch}
+}
+
+/* V97 — mobile cover becomes a centered title-over-art composition. */
+@media(max-width:560px){
+  .hero-editorial{
+    width:100%;
+    height:100svh;
+    min-height:560px;
+    padding:62px 16px 14px;
+    grid-template-columns:1fr;
+    grid-template-rows:minmax(160px,.6fr) minmax(330px,1.4fr);
+    gap:12px;
+    align-items:stretch;
+  }
+  .hero-editorial .hero-copy{
+    width:100%;
+    height:auto;
+    min-height:0;
+    padding:0;
+    grid-template-rows:auto 1fr auto;
+  }
+  .hero-editorial .hero-meta-line{padding-bottom:6px}
+  .hero-editorial .hero-title-group{
+    width:min(76vw,260px);
+    margin:auto;
+    padding:5px 0;
+    text-align:center;
+  }
+  .hero-editorial .hero-title-float{
+    width:100%;
+    margin:0 auto 5px;
+    transform:none;
+    animation-name:hero-title-float;
+  }
+  .hero-editorial .hero-edition{font-size:clamp(18px,6vw,24px);line-height:1.05}
+  .hero-editorial .hero-bottom{padding-top:6px}
+  .hero-editorial .hero-bottom p{font-size:6px}
+  .hero-editorial .hero-scroll-link{width:30px;height:30px}
+  .hero-editorial .hero-art{
+    width:100%;
+    height:100%;
+    min-height:0;
+    aspect-ratio:auto;
+    justify-self:center;
+    border-radius:0;
+  }
+  .hero-editorial .hero-art video{
+    inset:auto;
+    left:0;
+    top:6%;
+    width:100%;
+    height:88%;
+    max-height:none;
+    aspect-ratio:auto;
+    transform:none;
+    object-fit:cover;
+    object-position:68% 50%;
+    clip-path:none;
+  }
+}
+
+/* V98 — flatten the mobile case carousel so the next content enters the viewport sooner. */
+@media(max-width:560px){
+  .case-carousel-stage{height:clamp(274px,72vw,312px)}
+  .carousel-card,
+  .carousel-card.case-aure,
+  .carousel-card.case-ssww{
+    width:55%;
+    height:100%;
+    min-height:0;
+    max-height:100%;
+    padding:10px;
+  }
+  .carousel-card .tile-art{transform:none}
+  .carousel-card .tile-art img{
+    width:100%;
+    height:100%;
+    transform:none;
+    object-fit:cover;
+    object-position:center;
+  }
+  .carousel-card .tile-label{padding-right:0}
+  .carousel-card .tile-label h3{
+    max-width:100%;
+    font-size:clamp(15px,4.7vw,19px);
+    line-height:1;
+    letter-spacing:-.045em;
+  }
+  .carousel-card .tile-label p{font-size:7px;line-height:1.15}
+  .case-carousel-controls{margin-top:12px}
+}
+
+/* V99 — give every creative-direction badge more breathing room above and below. */
+.aure-title-block>p{
+  margin:clamp(6px,.55vw,9px) 0 clamp(14px,1vw,18px);
+}
+.crossborder-strategy-copy>header>span{
+  margin-block:clamp(5px,.45vw,8px);
+}
+.crossborder-strategy-copy>h3{
+  margin-top:clamp(22px,2vw,30px);
+}
+
+/* V100 — identify the dedicated modeling tools without competing with the study label. */
+.model-software-badge{
+  display:inline-flex;
+  align-items:center;
+  width:max-content;
+  max-width:100%;
+  margin:8px 0 0 8px;
+  padding:4px 8px;
+  border:1px solid rgba(25,25,22,.45);
+  border-radius:999px;
+  background:#171716;
+  color:#f2eee5;
+  font-family:Arial,"Noto Sans SC","Microsoft YaHei",sans-serif;
+  font-size:9px;
+  font-weight:900;
+  line-height:1;
+  letter-spacing:.07em;
+}
+@media(max-width:900px){
+  .model-software-badge{
+    margin:6px 0 0 4px;
+    padding:3px 6px;
+    font-size:6px;
+  }
+}
+
+/* V101 — align the workflow with the showcase and clearly separate process from final work. */
+.ai-process-board{
+  width:100%;
+  max-width:none;
+  margin-bottom:clamp(38px,4vw,58px);
+}
+.aigc-showcase-divider{
+  display:flex;
+  align-items:center;
+  width:100%;
+  margin:0 0 clamp(22px,2.2vw,34px);
+  padding-top:clamp(15px,1.4vw,22px);
+  border-top:1px solid rgba(25,25,22,.24);
+}
+.aigc-showcase-divider>span{
+  display:inline-flex;
+  align-items:center;
+  width:max-content;
+  max-width:100%;
+  padding:6px 10px 5px;
+  border:2px solid #f2eee5;
+  border-radius:10px;
+  background:#171716;
+  color:#f2eee5;
+  box-shadow:0 0 0 2px #171716,0 3px 6px rgba(25,25,22,.14);
+  font-size:clamp(7px,.62vw,10px);
+  font-weight:900;
+  line-height:1.1;
+  letter-spacing:.1em;
+}
+.aigc-showcase-divider>span::before{
+  content:"✦";
+  margin-right:6px;
+  color:#d7c891;
+}
+@media(max-width:900px){
+  .ai-process-board{margin-bottom:34px}
+  .aigc-showcase-divider{margin-bottom:18px;padding-top:13px}
+  .aigc-showcase-divider>span{
+    padding:4px 6px 3px;
+    border-width:1px;
+    border-radius:7px;
+    box-shadow:0 0 0 1px #171716,0 2px 3px rgba(25,25,22,.12);
+    font-size:5.5px;
+    letter-spacing:.06em;
+  }
+  .aigc-showcase-divider>span::before{margin-right:4px}
+}
+
+/* V102 — mark the portrait sequence as a character-consistency study. */
+.aigc-consistency-label{
+  grid-column:1/-1;
+  display:flex;
+  align-items:center;
+  width:100%;
+  margin-top:clamp(8px,1vw,14px);
+}
+.aigc-consistency-label>span{
+  display:inline-flex;
+  align-items:center;
+  width:max-content;
+  max-width:100%;
+  padding:5px 9px 4px;
+  border:1px solid #171716;
+  border-radius:999px;
+  background:#f2eee5;
+  color:#171716;
+  box-shadow:0 2px 0 rgba(25,25,22,.12);
+  font-size:8px;
+  font-weight:900;
+  line-height:1;
+  letter-spacing:.09em;
+}
+.aigc-consistency-label>span::before{
+  content:"02";
+  margin-right:7px;
+  color:var(--blue);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:1.15em;
+  font-weight:400;
+}
+@media(max-width:900px){
+  .aigc-consistency-label{margin-top:5px}
+  .aigc-consistency-label>span{padding:3px 6px;font-size:5.5px}
+  .aigc-consistency-label>span::before{margin-right:4px}
+}
+
+/* V103 — Amazon 汽配目录卡：放大并下移取景，突出皮卡主体 */
+.carousel-card.case-crossborder .tile-art img {
+  transform: scale(1.32);
+  transform-origin: 50% 68%;
+}
+
+.carousel-card.case-crossborder.is-center:hover .tile-art img {
+  transform: scale(1.32);
 }

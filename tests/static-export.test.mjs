@@ -29,7 +29,7 @@ test("exports an upload-ready static portfolio", async () => {
   for (const required of [
     "favicon.png",
     "portfolio-ufo-cover.jpg",
-    "portfolio-ufo-cover.mp4",
+    "portfolio-cover-2026.mp4",
     "portfolio-title.png",
     "inside-title.png",
     "illustrations/sticker-product-knight.png",

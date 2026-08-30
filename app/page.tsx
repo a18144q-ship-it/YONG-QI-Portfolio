@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
 
 const asset = (folder: string, number: number) => `/v2/${folder}/${String(number).padStart(2, "0")}.webp`;
@@ -17,7 +17,8 @@ function ResponsiveImage({ src, alt, loading = "lazy", ariaHidden = false, class
   const [useOriginal, setUseOriginal] = useState(false);
   const [status, setStatus] = useState<"idle" | "loading" | "loaded" | "error">(loading === "eager" ? "loading" : "idle");
   const previewSrc = previewAsset(src);
-  const baseSrc = useOriginal ? src : previewSrc;
+  const isAnimated = /\.gif(?:\?|$)/i.test(src);
+  const baseSrc = isAnimated || useOriginal ? src : previewSrc;
   const currentSrc = retryAttempt ? retryAsset(baseSrc, retryAttempt) : baseSrc;
 
   useEffect(() => {
@@ -78,13 +79,13 @@ function ResponsiveImage({ src, alt, loading = "lazy", ariaHidden = false, class
 const catalogue = [
   { href: "#aure", id: "01", title: "耳机视觉", sub: "AURE BUDS PRO", image: asset("aure", 1), className: "case-aure" },
   { href: "#ssww", id: "02", title: "卫浴视觉", sub: "SSWW BATH", image: asset("ssww", 1), className: "case-ssww" },
-  { href: "#crossborder", id: "03", title: "皮卡防滚架", sub: "TRUCK ROLL BAR", image: "/v2/crossborder/truck-roll-bar/02.jpg", className: "case-crossborder" },
+  { href: "#crossborder", id: "03", title: "Amazon汽配", sub: "TRUCK ROLL BAR", image: "/v2/crossborder/truck-roll-bar/amazon-auto-parts-card.jpg", className: "case-crossborder" },
   { href: "#renders", id: "04", title: "产品渲染", sub: "PRODUCT RENDERS", image: asset("renders", 7), className: "case-renders" },
   { href: "#aigc", id: "05", title: "AI视觉设计", sub: "IMAGE · AI", image: asset("aigc", 7), className: "case-aigc" },
 ];
 
 type RenderItem = number | { src: string; alt: string; orientation: "wide" | "square" | "tall" };
-type RenderGroup = { index: string; title: string; sub: string; images: RenderItem[]; layout: string; model?: boolean };
+type RenderGroup = { index: string; title: string; sub: string; images: RenderItem[]; layout: string; model?: boolean; software?: string };
 
 const renderGroups: RenderGroup[] = [
   { index: "01", title: "PRODUCT STUDIES", sub: "单品渲染", images: [3, 4, 5, 6, { src: "/v2/renders/watch/detail-01.webp", alt: "机械腕表表冠与测速刻度细节渲染", orientation: "wide" }, { src: "/v2/renders/watch/detail-02.webp", alt: "机械腕表表盘与机芯细节渲染", orientation: "wide" }], layout: "product-study" },
@@ -95,7 +96,7 @@ const renderGroups: RenderGroup[] = [
     { src: "/v2/renders/daily-care/perfume-detail.webp", alt: "琥珀香水悬浮液滴产品渲染", orientation: "tall" },
     { src: "/v2/renders/daily-care/perfume-motion.gif", alt: "琥珀香水动态产品渲染", orientation: "tall" },
   ], layout: "daily-care" },
-  { index: "04", title: "WHITE MODEL STUDY", sub: "产品建模白模展示", images: [32, 33, 34, 35, 36, 37], layout: "model-study", model: true },
+  { index: "04", title: "WHITE MODEL STUDY", sub: "产品建模白模展示", images: [32, 33, 34, 35, 36, 37], layout: "model-study", model: true, software: "SOFTWARE · Blender · Plasticity" },
 ];
 
 const aiGroups = [
@@ -104,24 +105,24 @@ const aiGroups = [
 
 const aiImageProcessGroups = [
   { id: "01", folder: "set-01", orientation: "landscape", kind: "vehicle", product: "红色越野车", steps: [
-    { number: "01", file: "01.jpg", title: "三维基底", note: "3D BASE RENDER" },
-    { number: "02", file: "02.jpg", title: "场景生成", note: "AI ENVIRONMENT BUILD" },
-    { number: "03", file: "03.jpg", title: "精修成片", note: "FINAL IMAGE" },
+    { number: "01", file: "01.jpg", title: "渲染", note: "RENDER" },
+    { number: "02", file: "02.jpg", title: "生成", note: "GENERATION" },
+    { number: "03", file: "03.jpg", title: "精修", note: "RETOUCH" },
   ] },
   { id: "02", folder: "set-03", orientation: "landscape", kind: "vehicle", product: "蓝色皮卡", steps: [
-    { number: "01", file: "01.jpg", title: "产品基底", note: "PRODUCT BASE" },
-    { number: "02", file: "02.jpg", title: "场景合成", note: "SCENE COMPOSITING" },
-    { number: "03", file: "03.jpg", title: "最终成片", note: "FINAL IMAGE" },
+    { number: "01", file: "01.jpg", title: "渲染", note: "RENDER" },
+    { number: "02", file: "02.jpg", title: "生成", note: "GENERATION" },
+    { number: "03", file: "03.jpg", title: "精修", note: "RETOUCH" },
   ] },
   { id: "03", folder: "set-02", orientation: "portrait", kind: "product", product: "户外风扇", steps: [
-    { number: "01", file: "01.webp", title: "产品基底", note: "PRODUCT BASE" },
-    { number: "02", file: "02.webp", title: "场景合成", note: "SCENE COMPOSITING" },
-    { number: "03", file: "03.webp", title: "最终成片", note: "FINAL IMAGE" },
+    { number: "01", file: "01.webp", title: "渲染", note: "RENDER" },
+    { number: "02", file: "02.webp", title: "生成", note: "GENERATION" },
+    { number: "03", file: "03.webp", title: "精修", note: "RETOUCH" },
   ] },
   { id: "04", folder: "set-04", orientation: "portrait", kind: "product", product: "沙发场景", steps: [
-    { number: "01", file: "02.jpg", title: "人物基底", note: "MODEL BASE" },
-    { number: "02", file: "03.jpg", title: "场景生成", note: "SCENE GENERATION" },
-    { number: "03", file: "01.jpg", title: "最终成片", note: "FINAL IMAGE" },
+    { number: "01", file: "02.jpg", title: "模特", note: "MODEL" },
+    { number: "02", file: "03.jpg", title: "渲染", note: "RENDER" },
+    { number: "03", file: "01.jpg", title: "精修", note: "RETOUCH" },
   ] },
 ];
 
@@ -139,7 +140,6 @@ const sswwPalette = [
   { name: "AQUA", hex: "#3977BF" },
 ];
 
-function Arrow() { return <span className="arrow" aria-hidden="true">↗</span>; }
 function StickerArrowIcon({ direction, className = "" }: { direction: "down" | "left" | "right" | "up-right"; className?: string }) {
   const arrowPath = "M26 9C23.2 9 21 11.2 21 14V31H13C8.2 31 5.8 36.8 9.3 40L27.9 57.2C30.2 59.3 33.8 59.3 36.1 57.2L54.7 40C58.2 36.8 55.8 31 51 31H43V14C43 11.2 40.8 9 38 9H26Z";
   return <svg className={`sticker-arrow-icon is-${direction} ${className}`} viewBox="0 0 64 68" aria-hidden="true">
@@ -320,7 +320,7 @@ function DirectoryCarousel() {
         >
           <div className="tile-art"><ResponsiveImage src={item.image} alt="" /></div>
           <div className="carousel-card-top"><span><b>{item.id}</b> / CASE</span></div>
-          <div className="tile-label"><h3>{item.title}</h3><p>{item.sub}</p><Arrow /></div>
+          <div className="tile-label"><h3>{item.title}</h3><p>{item.sub}</p></div>
         </a>;
       })}
     </div>
@@ -368,7 +368,10 @@ function RenderGrid({ images, layout, onOpen }: { images: RenderItem[]; layout: 
 }
 
 function ProductSceneGrid({ images, onOpen }: { images: number[]; onOpen: (src: string, alt: string) => void }) {
-  return <div className="ai-product-mosaic">{images.map((number) => <ZoomImage key={number} src={asset("aigc", number)} alt={`AI product scene ${number}`} onOpen={onOpen} className={number < 10 ? "orientation-wide" : "orientation-tall"} />)}</div>;
+  return <div className="ai-product-mosaic">{images.map((number) => <Fragment key={number}>
+    {number === 13 && <div className="aigc-consistency-label reveal"><span>CHARACTER CONSISTENCY · 人物一致性</span></div>}
+    <ZoomImage src={asset("aigc", number)} alt={`AI product scene ${number}`} onOpen={onOpen} className={number < 10 ? "orientation-wide" : "orientation-tall"} />
+  </Fragment>)}</div>;
 }
 
 function AiImageProcess({ onOpen }: { onOpen: (src: string, alt: string) => void }) {
@@ -381,7 +384,7 @@ function AiImageProcess({ onOpen }: { onOpen: (src: string, alt: string) => void
 
   return <section className="ai-process-board" aria-labelledby="ai-process-title">
     <div className="ai-process-head reveal">
-      <div><span>AI IMAGE WORKFLOW · 12 STEPS</span><h4 id="ai-process-title">产品场景生成流程</h4></div>
+      <div><h4 id="ai-process-title">产品场景生成流程</h4></div>
       <p>从产品基底、场景构建到最终精修，以连续图像展示生成过程中的构图、融合与光影控制。</p>
     </div>
     <div className="ai-process-vehicle-row" aria-label="汽车场景生成流程">
@@ -401,8 +404,8 @@ function AiImageProcess({ onOpen }: { onOpen: (src: string, alt: string) => void
 
 function AureCaseIntro() {
   return <><ProjectOpening index="01" category="E-COMMERCE VISUAL SYSTEM" title="耳机详情视觉" subtitle="AURE Buds Pro" summary="为 AURE 耳机建立从产品功能到情绪场景的电商视觉系统，以沉浸降噪为叙事核心，统一主视觉、卖点图与产品精修。" image="/illustrations/sticker-aigc-office.png" variant="aure" artworkClass="is-sticker-artwork is-office-sticker" mirror={false} facts={[
-    { label: "PROJECT / 项目类型", value: "耳机电商详情视觉" },
-    { label: "ROLE / 个人职责", value: "视觉方向 · 3D 场景 · 后期精修" },
+    { label: "PROJECT / 项目类型", value: "详情视觉设计" },
+    { label: "ROLE / 个人职责", value: "视觉方向 · 3D 建模渲染 · AI 后期精修" },
     { label: "OUTPUT / 交付内容", value: "主视觉 · 卖点图 · 详情页" },
     { label: "TOOLS / 工作方法", value: "C4D · Octane · PS · AI 辅助" },
   ]} /><div className="aure-case-intro reveal">
@@ -411,7 +414,7 @@ function AureCaseIntro() {
       <figcaption><span>BRAND WORLD · 01</span><b>Listen beyond noise.</b></figcaption>
     </figure>
     <article className="aure-strategy-panel">
-      <div className="strategy-textures" aria-hidden="true"><i className="strategy-cow-spots"><b /><b /><b /><b /></i><i className="strategy-ufo-beam" /></div>
+      <div className="strategy-textures" aria-hidden="true"><i className="strategy-cow-spots"><b /><b /><b /><b /></i></div>
       <div className="aure-title-block">
         <p>CREATIVE DIRECTION · 核心概念</p>
         <h2><span>让静谧</span><em>被看见</em></h2>
@@ -465,7 +468,7 @@ function AureDesignSystem() {
 
 function SswwCaseIntro() {
   return <><ProjectOpening index="02" category="BATH PRODUCT VISUAL SYSTEM" title="卫浴详情视觉" subtitle="SSWW Bath" summary="围绕按摩浴缸与独立浴缸完成系列化视觉升级，把功能、材质与生活场景整理成连续、清晰的国内电商阅读节奏。" image="/illustrations/sticker-ssww-bath.png" variant="ssww" artworkClass="is-sticker-artwork is-ssww-sticker" mirror={false} facts={[
-    { label: "PROJECT / 项目类型", value: "卫浴产品电商视觉" },
+    { label: "PROJECT / 项目类型", value: "详情视觉设计" },
     { label: "ROLE / 个人职责", value: "视觉方向 · 场景渲染 · 页面编排" },
     { label: "OUTPUT / 交付内容", value: "主视觉 · 功能图 · 系列详情" },
     { label: "TOOLS / 工作方法", value: "C4D · Octane · PS · AI 辅助" },
@@ -475,7 +478,7 @@ function SswwCaseIntro() {
       <figcaption><span>BRAND WORLD · 02</span><b>A warm ritual, made personal.</b></figcaption>
     </figure>
     <article className="aure-strategy-panel ssww-strategy-panel">
-      <div className="strategy-textures" aria-hidden="true"><i className="strategy-cow-spots"><b /><b /><b /><b /></i><i className="strategy-ufo-beam" /></div>
+      <div className="strategy-textures" aria-hidden="true"><i className="strategy-cow-spots"><b /><b /><b /><b /></i></div>
       <div className="aure-title-block ssww-title-block">
         <p>CREATIVE DIRECTION · 核心概念</p>
         <h2><span>暖调轻奢</span><em>浴境</em></h2>
@@ -537,10 +540,10 @@ function CrossborderStrategyStrip() {
       <header><span>CREATIVE DIRECTION · 核心概念</span><b>TRUCK ROLL BAR · EXPORT E-COMMERCE</b></header>
       <h3>稳固承载，<em>拓展远行。</em></h3>
       <div className="crossborder-strategy-grid">
-        <article><span>01 / 设计背景</span><p>将防滚架的承重、耐候与多场景适配转化为清晰卖点。</p></article>
-        <article><span>02 / 核心受众</span><p>皮卡改装、户外露营与长途载物用户。</p></article>
-        <article><span>03 / 卖点提炼</span><p><strong>350 LBS</strong> 承重 · 防锈黑色涂层 · 灵活适配。</p></article>
-        <article><span>04 / 视觉定调</span><p>户外越野场景 × 硬朗性能表达。</p></article>
+        <article><span>01 / 设计背景</span><p>将防滚架的承重结构、耐候涂层与车型适配信息，提炼为清晰可信的购买依据。</p></article>
+        <article><span>02 / 核心受众</span><p>聚焦皮卡改装、户外露营与长途载物用户，回应安全承载、灵活拓展与可靠耐用需求。</p></article>
+        <article><span>03 / 卖点提炼</span><p><strong>350 LBS</strong> 稳固承重 · 防锈黑色涂层 · 多车型灵活适配 · 灯具与载物拓展。</p></article>
+        <article><span>04 / 视觉定调</span><p>以户外度假旅行为视觉主线，通过海岸场景强化产品的户外使用属性，多角度呈现产品外观、安装效果与整车适配性，并运用品牌色强化卖点信息与整体品牌识别。</p></article>
       </div>
     </div>
   </section>;
@@ -756,20 +759,36 @@ export default function Home() {
       video.defaultMuted = true;
       video.muted = true;
       video.volume = 0;
+      video.setAttribute("muted", "");
+      video.setAttribute("playsinline", "");
+      video.setAttribute("webkit-playsinline", "");
     };
     const resume = () => {
       silence();
       if (!document.hidden) void video.play().catch(() => undefined);
     };
+    const keepPlaying = () => {
+      if (!document.hidden && video.paused && video.readyState >= 2) resume();
+    };
     silence();
     resume();
     video.addEventListener("volumechange", silence);
+    video.addEventListener("loadeddata", resume);
+    video.addEventListener("canplay", resume);
     document.addEventListener("visibilitychange", resume);
     window.addEventListener("focus", resume);
+    window.addEventListener("pageshow", resume);
+    window.addEventListener("pointerdown", resume, { passive: true });
+    const playbackGuard = window.setInterval(keepPlaying, 1200);
     return () => {
+      window.clearInterval(playbackGuard);
       video.removeEventListener("volumechange", silence);
+      video.removeEventListener("loadeddata", resume);
+      video.removeEventListener("canplay", resume);
       document.removeEventListener("visibilitychange", resume);
       window.removeEventListener("focus", resume);
+      window.removeEventListener("pageshow", resume);
+      window.removeEventListener("pointerdown", resume);
     };
   }, []);
 
@@ -808,11 +827,11 @@ export default function Home() {
           </div>
           <p className="hero-edition">Selected Works <em>2026</em></p>
         </div>
-        <div className="hero-bottom"><p>产品视觉 · 三维渲染 · AI 图像</p><a href="#cases" className="circle-link hero-scroll-link" aria-label="向下滚动查看案例"><DownArrow /></a></div>
+        <div className="hero-bottom"><p>电商视觉 · 三维渲染 · AI 图像</p><a href="#cases" className="circle-link hero-scroll-link" aria-label="向下滚动查看案例"><DownArrow /></a></div>
       </div>
       <div className="hero-art reveal">
-        <video ref={heroVideoRef} autoPlay loop muted playsInline preload="auto" poster="/portfolio-ufo-cover.jpg" aria-label="UFO 光束吸起奶牛与斑马的动态封面">
-          <source src="/portfolio-ufo-cover.mp4" type="video/mp4" />
+        <video ref={heroVideoRef} autoPlay loop muted playsInline preload="auto" poster="/portfolio-ufo-cover.jpg" aria-label="作品集动态封面">
+          <source src="/portfolio-cover-2026.mp4" type="video/mp4" />
         </video>
       </div>
     </header>
@@ -829,26 +848,26 @@ export default function Home() {
 
     <section className="case-section crossborder-section" id="crossborder"><ProjectOpening index="03" category="TRUCK ROLL BAR VISUAL SYSTEM" title="皮卡防滚架视觉" subtitle="Truck Roll Bar" summary="围绕皮卡防滚架建立从主图、卖点图到 Amazon A+ 的完整跨境电商视觉，以 350 LBS 承重、防锈耐候、车型适配与载物拓展为核心，强化产品的硬朗性能与户外使用价值。" image="/illustrations/sticker-crossborder.png" variant="crossborder" artworkClass="is-sticker-artwork is-crossborder-sticker" mirror={false} facts={[
       { label: "PROJECT / 项目类型", value: "皮卡防滚架跨境电商视觉" },
-      { label: "ROLE / 个人职责", value: "视觉方向 · 卖点策划 · 场景合成" },
+      { label: "ROLE / 个人职责", value: "视觉方向 · 场景合成" },
       { label: "OUTPUT / 交付内容", value: "主图 · 卖点图 · Amazon A+" },
-      { label: "TOOLS / 工作方法", value: "C4D · Photoshop · AI 辅助" },
+      { label: "TOOLS / 工作方法", value: "Blender · Photoshop · AI 辅助" },
     ]} /><CrossborderStrategyStrip /><CrossborderGallery onOpen={open} /></section>
     <Ticker />
 
     <section className="case-section render-section" id="renders"><ProjectOpening index="04" category="3D PRODUCT VISUALIZATION" title="产品渲染" subtitle="Product Visuals" summary="跨随身配件、日化、五金、软体家具与卫浴的产品可视化选集，集中呈现建模、材质、灯光与商业画面控制能力。" image="/illustrations/sticker-product-knight.png" variant="renders" artworkClass="is-sticker-artwork is-product-sticker" mirror={false} facts={[
-      { label: "PROJECT / 项目类型", value: "跨品类产品渲染选集" },
-      { label: "ROLE / 个人职责", value: "建模 · 材质 · 灯光 · 后期" },
-          { label: "OUTPUT / 内容规模", value: "4 个系列 · 24 幅作品" },
-      { label: "TOOLS / 工作方法", value: "C4D · Octane · Photoshop" },
-    ]} />{renderGroups.map((group) => <div className={`render-group ${group.model ? "model-group" : ""}`} key={group.index}><div className="group-label reveal"><span>{group.index}</span><div><h3>{group.sub}</h3><p>{group.title}</p></div></div><RenderGrid images={group.images} layout={group.layout} onOpen={open} /></div>)}</section>
+      { label: "CATEGORY / 展示类型", value: "单品产品渲染" },
+      { label: "FOCUS / 视觉重点", value: "材质 · 灯光 · 构图 · 氛围" },
+      { label: "COLLECTION / 收录内容", value: "4 个系列 · 24 幅作品" },
+      { label: "TOOLS / 制作工具", value: "C4D · Octane · Photoshop" },
+    ]} />{renderGroups.map((group) => <div className={`render-group ${group.model ? "model-group" : ""}`} key={group.index}><div className="group-label reveal"><span>{group.index}</span><div><h3>{group.sub}</h3><p>{group.title}</p>{group.software && <small className="model-software-badge">{group.software}</small>}</div></div><RenderGrid images={group.images} layout={group.layout} onOpen={open} /></div>)}</section>
     <Ticker />
 
-    <section className="case-section aigc-section" id="aigc"><ProjectOpening index="05" category="IMAGE · AI" title="生成图像" subtitle="Image & AI" summary="将产品基底、场景生成与最终精修整理为一套完整流程，重点呈现产品融合、构图与光影控制的可控性。" image="/illustrations/sticker-aigc-office.png" variant="aigc" artworkClass="is-sticker-artwork is-office-sticker" mirror={false} facts={[
-      { label: "PROJECT / 项目类型", value: "AI 产品场景视觉" },
-      { label: "ROLE / 个人职责", value: "视觉设定 · 场景生成 · 合成 · 精修" },
-      { label: "OUTPUT / 交付内容", value: "产品场景 · 生成流程" },
-      { label: "PROCESS / 工作流程", value: "产品基底 · 场景生成 · 精修 · 后期" },
-    ]} />{aiGroups.map((group) => <div className={`ai-group ai-group-${group.index} ai-group-${group.kind}`} key={group.index}><div className="group-label reveal"><span>{group.index}</span><div><h3>{group.title}</h3><p>{group.note}</p></div></div>{group.kind === "product" && <><AiImageProcess onOpen={open} /><ProductSceneGrid images={group.images} onOpen={open} /></>}</div>)}</section>
+    <section className="case-section aigc-section" id="aigc"><ProjectOpening index="05" category="IMAGE · AI" title="AIGC工作流" subtitle="AIGC Workflow" summary="将产品基底、场景生成与最终精修整理为一套完整流程，重点呈现产品融合、构图与光影控制的可控性。" image="/illustrations/sticker-aigc-office.png" variant="aigc" artworkClass="is-sticker-artwork is-office-sticker" mirror={false} facts={[
+      { label: "DIRECTION / 探索方向", value: "AI 产品场景视觉" },
+      { label: "FOCUS / 探索重点", value: "产品一致性 · 场景构建 · 光影融合" },
+      { label: "METHOD / 实践方式", value: "提示词设计 · 图像合成 · 局部重绘 · 统一调色" },
+      { label: "WORKFLOW / 工作流程", value: "产品基底 · 场景搭建 · 光影融合 · 成片输出" },
+    ]} />{aiGroups.map((group) => <div className={`ai-group ai-group-${group.index} ai-group-${group.kind}`} key={group.index}><div className="group-label reveal"><span>{group.index}</span><div><h3>{group.title}</h3><p>{group.note}</p></div></div>{group.kind === "product" && <><AiImageProcess onOpen={open} /><div className="aigc-showcase-divider reveal"><span>AIGC VISUAL SHOWCASE · 视觉作品展示</span></div><ProductSceneGrid images={group.images} onOpen={open} /></>}</div>)}</section>
 
     <footer className="about-contact-section" id="about">
       <span className="contact-anchor" id="contact" aria-hidden="true" />
